@@ -1,0 +1,27 @@
+flowchart LR
+  subgraph IN["Inputs"]
+    I1["Patient question<br/>(text, any language)"]
+    I2["Patient voice recording<br/>(audio/webm)"]
+    I3["Game round data<br/>(reaction time, mistakes, level)"]
+    I4["WhatsApp message<br/>(e.g. 'Done, I took my medicine')"]
+    I5["Caregiver entries<br/>(patients, reminders, photos)"]
+  end
+  subgraph PROC["Processing"]
+    Q1["P1 / P2 + patient records → Gemini"]
+    Q2["Adaptive difficulty: ML engine,<br/>else rules (0 mistakes & < 3.5 s → level up)"]
+    Q3["Keyword match → acknowledge reminder,<br/>else P3 → Gemini"]
+    Q4["MongoDB storage + 09:00 cron"]
+  end
+  subgraph OUT["Outputs"]
+    O1["Reply in patient's language<br/>(2-4 sentences, 🌸)"]
+    O2["Transcription + reply, read aloud"]
+    O3["Next level (1-5) + weekly<br/>cognitive health score (0-100)"]
+    O4["WhatsApp reply; reminder marked done"]
+    O5["Caregiver alerts, adherence %, charts"]
+  end
+  I1 --> Q1 --> O1
+  I2 --> Q1 --> O2
+  I3 --> Q2 --> O3
+  I4 --> Q3 --> O4
+  I5 --> Q4 --> O5
+  Q3 --> O5

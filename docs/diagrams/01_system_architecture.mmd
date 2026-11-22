@@ -1,0 +1,37 @@
+flowchart TB
+  subgraph Client["① React PWA · Vercel"]
+    direction LR
+    UI["Patient portal · Caregiver portal<br/>(React Router, Tailwind, i18next)"]
+    SW["Service worker (Workbox)<br/>+ IndexedDB offline queue"]
+    TTS["Web Speech API<br/>read-aloud en / hi / as"]
+  end
+  subgraph API["② Express API · Render"]
+    direction LR
+    ROUTES["Routes<br/>/api/patients · /api/caregivers · /api/reminders<br/>/api/game-sessions · /api/translation · /api/whatsapp"]
+    AUTH["JWT auth middleware<br/>bcrypt PINs & passwords"]
+    CHAT["patientChatService<br/>prompts P1 + P2"]
+    WAAI["aiService<br/>prompt P3"]
+    ML["mlService<br/>+ rule-based fallback"]
+    CRON["node-cron, 09:00 daily<br/>reminder dispatch"]
+  end
+  subgraph EXT["③ Data & services"]
+    direction LR
+    DB[("MongoDB Atlas<br/>6 collections")]
+    GEM["Google Gemini API"]
+    MLE["ML engine (FastAPI)<br/>optional, external"]
+    META["Meta WhatsApp<br/>Cloud API"]
+  end
+  UI -- "HTTPS JSON + Bearer JWT" --> ROUTES
+  UI --- SW
+  UI --- TTS
+  ROUTES --- AUTH
+  ROUTES --> CHAT
+  ROUTES --> WAAI
+  ROUTES --> ML
+  ROUTES -- "Mongoose" --> DB
+  CHAT --> GEM
+  WAAI --> GEM
+  ML -. "6 s timeout,<br/>else rules" .-> MLE
+  CRON --> META
+  META -- "webhook: patient message" --> ROUTES
+  WAAI -- "reply" --> META

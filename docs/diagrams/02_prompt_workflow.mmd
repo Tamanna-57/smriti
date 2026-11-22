@@ -1,0 +1,17 @@
+flowchart TD
+  A["Patient asks Smriti<br/>(typed text or voice recording)"] --> B["POST /api/patients/:id/chat<br/>{message | audioData, history}"]
+  B --> C{"Message or audio<br/>present?"}
+  C -- no --> E400["HTTP 400<br/>'A message text or audio recording is required.'"]
+  C -- yes --> D["Load from MongoDB (2.5 s limit each):<br/>patient profile · today's reminders ·<br/>Memory Bank photos · last 5 game sessions"]
+  D --> F["Fill P1 system prompt<br/>(profile, language rule, schedule, family, games, 5 rules)"]
+  F --> G{"Voice input?"}
+  G -- "text" --> H1["User turn = {user_message}<br/>+ last 6 chat turns"]
+  G -- "audio" --> H2["User turn = audio + P2 instruction:<br/>'TRANSCRIPTION: … / REPLY: …'"]
+  H1 & H2 --> I["Gemini cascade, temperature 0.7, max 350 tokens<br/>1. gemini-3.5-flash-lite<br/>2. gemini-3.5-flash<br/>3. gemini-flash-latest"]
+  I --> J{"Non-empty reply<br/>(> 3 chars)?"}
+  J -- "no / all failed" --> K["Rule-based fallback<br/>keyword match: doctor, medicine, family,<br/>where/home, routine → fixed reply in as / hi / en"]
+  J -- yes --> L{"Contains TRANSCRIPTION:<br/>and REPLY:?"}
+  L -- yes --> M["Split into transcription + reply"]
+  L -- no --> N["Use reply as is"]
+  K & M & N --> O["JSON {reply, transcription,<br/>preferredLanguage, replySource}"]
+  O --> P["Chat window shows reply<br/>and reads it aloud (Web Speech API)"]

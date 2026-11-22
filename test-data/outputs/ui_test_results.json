@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "ranAt": "2026-11-22T14:38:11.362Z",
+    "appUrl": "http://127.0.0.1:4173"
+  },
+  "results": [
+    {
+      "id": "UI1",
+      "type": "Invalid",
+      "input": "Login screen: Ramesh Sharma, PIN 9999",
+      "expected": "Stays on login screen with an error message",
+      "actual": "URL /; error message shown: true",
+      "result": "Pass",
+      "screenshot": "docs/screenshots/milestone2/UI1_wrong_pin_rejected.png"
+    },
+    {
+      "id": "UI2",
+      "type": "Normal",
+      "input": "Open Daily Routine Sequencer as Ramesh and play all 5 levels",
+      "expected": "Cards dealt at start; game completes; session saved (HTTP 201)",
+      "actual": "5 cards at start; save responses: 201",
+      "result": "Pass",
+      "screenshot": "docs/screenshots/milestone2/UI2_routine_sequencer_completed_saved.png"
+    },
+    {
+      "id": "UI3",
+      "type": "Edge",
+      "input": "Switch UI language to Hindi, open Daily Reminders",
+      "expected": "10 reminders with 10 different Hindi titles",
+      "actual": "10 distinct Hindi titles: सुबह का नाश्ता और असम चाय / सुबह की निर्धारित दवा / सुबह पानी पीने का समय …",
+      "result": "Pass",
+      "screenshot": "docs/screenshots/milestone2/UI3_hindi_reminder_titles.png"
+    },
+    {
+      "id": "UI4",
+      "type": "Edge",
+      "input": "Network switched off, then open /patient/reminders",
+      "expected": "Page and today's schedule load from the PWA cache",
+      "actual": "service worker active: true; schedule shown offline: true",
+      "result": "Pass",
+      "screenshot": "docs/screenshots/milestone2/UI4_offline_reminders.png"
+    },
+    {
+      "id": "UI5",
+      "type": "Normal",
+      "input": "Open AI Assistant, type 'Who is my doctor?'",
+      "expected": "Reply naming Dr. Ananya Sharma appears in the chat window",
+      "actual": "HTTP 200, replySource fallback; reply shown: true; \"আপোনাৰ মুখ্য চিকিৎসক আৰু তত্ত্বাৱধায়ক হৈছে Dr. Ananya Sharma। তেওঁ সদায় আপোনাৰ স্বাস্থ্য\"",
+      "result": "Pass",
+      "screenshot": "docs/screenshots/milestone2/UI5_chat_who_is_my_doctor.png"
+    }
+  ]
+}
