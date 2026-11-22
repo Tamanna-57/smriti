@@ -1,341 +1,194 @@
-<div align="center">
+# Smriti (স্মৃতি / स्मृति): AI Memory Companion for Elderly Dementia Patients
 
-# 🌸 Smriti (স্মৃতি / स्मृति)
-### *AI-Powered Cognitive Care & Memory Companion Ecosystem for Elderly Dementia Patients*
-#### **Smart India Hackathon 2026 (SIH26003) • Ministry of Development of North Eastern Region (MDoNER)**
+**SCSE4041 Mini Project, Milestone 2**
 
-[![Live Web App](https://img.shields.io/badge/Live%20App-smriti--puce.vercel.app-B5502E.svg?style=for-the-badge&logo=vercel)](https://smriti-puce.vercel.app)
-[![ML Engine](https://img.shields.io/badge/ML%20Engine-dementia--ai--engine.onrender.com-FF6B6B.svg?style=for-the-badge&logo=render)](https://dementia-ai-engine.onrender.com/docs)
-[![WhatsApp Bot](https://img.shields.io/badge/WhatsApp%20Bot-wa.me%2F15556680031-25D366.svg?style=for-the-badge&logo=whatsapp)](https://wa.me/15556680031?text=Hi%20Smriti)
-
-<br/>
-
-[![React 19](https://img.shields.io/badge/React-19.2-blue.svg)](https://react.dev/)
-[![TailwindCSS v4](https://img.shields.io/badge/TailwindCSS-v4-38bdf8.svg)](https://tailwindcss.com/)
-[![PWA Offline-First](https://img.shields.io/badge/PWA-Workbox%20%2B%20IndexedDB-purple.svg)](https://web.dev/progressive-web-apps/)
-[![Node.js](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org/)
-[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas%20Cloud-47A248.svg)](https://www.mongodb.com/)
-[![Google Gemini AI](https://img.shields.io/badge/Google%20Gemini-Multimodal%20AI-8E75B2.svg)](https://deepmind.google/technologies/gemini/)
-[![DPDP Act 2023](https://img.shields.io/badge/DPDP%20Act%202023-Compliant-success.svg)](https://smriti-puce.vercel.app/privacy-policy)
-[![WebAuthn FIDO2](https://img.shields.io/badge/WebAuthn-FIDO2%20Biometrics-orange.svg)](https://webauthn.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-<p align="center">
-  <b>Smriti</b> is an evidence-based, culturally grounded cognitive care platform bridging elderly dementia patients, family caregivers, and clinicians — uniting an <b>offline-first PWA</b>, <b>5 culturally attuned cognitive games</b>, <b>multilingual voice synthesis</b> (Assamese, Hindi, English), <b>Google Gemini AI</b>, a <b>Meta WhatsApp companion bot</b>, and a <b>live Machine Learning telemetry engine</b> on Render.
-</p>
-
-</div>
-
----
-
-## 1. Project Information
-
-| Field | Details |
+| | |
 |---|---|
-| **Project Title** | Smriti — AI-Based Cognitive Gaming and Memory Assistance Platform for Elderly Dementia Patients |
-| **PS ID** | SIH26003 |
-| **PS Title** | AI-Based Cognitive Gaming and Memory Assistance Platform for Elderly Dementia Patients in NER |
-| **Category** | Software |
-| **Theme** | MedTech / BioTech / HealthTech |
-| **Nodal Ministry** | Ministry of Development of North Eastern Region (MDoNER) |
-| **Team Name** | Design Divas |
-| **Institution** | NSUT, New Delhi — Branch: ITNS |
+| Prototype (web app) | **`<PROTOTYPE_URL>`**: Vercel deployment pending, see [Deployment](#7-deployment) |
+| Backend API | https://smriti-api-9lj6.onrender.com (Render, free plan; first request after idle takes ~50 s) |
+| Repository | https://github.com/Tamanna-57/smriti |
+| Original project | https://github.com/gopalrajlohiya11-ui/Smriti (Team Design Divas, Smart India Hackathon 2026, PS SIH26003) |
+| Demo logins | Patient: name `Ramesh Sharma`, PIN `1234` · Caregiver: `dr.ananya@smriti.in` / `caregiver123` |
 
 ---
 
-## 2. Problem Statement
+## 1. Problem statement
 
-Over **8.8 million Indians** live with dementia (2026), with **280,000–350,000 cases** concentrated in India's 8 North-Eastern states. The NER faces a uniquely severe crisis:
+People with early dementia forget medicines, meals and the faces of family. In India's North-Eastern Region the problem is sharper: few neurologists outside Guwahati, patchy 2G/3G internet, and elderly patients who speak Assamese, Hindi or a local language rather than English. Family caregivers have no simple way to see whether the day's routine is being followed.
 
-- 🏥 **85%+ of neurologists** operate exclusively out of Guwahati — rural hill-state patients have near-zero specialist access.
-- 🌧️ **Mountainous terrain and monsoon floods** sever physical access to healthcare. 2G/3G internet causes cloud-dependent apps to crash mid-session.
-- 🗣️ **220+ indigenous dialects** (Assamese, Bodo, Khasi, Mizo) make standard Western cognitive tests medically invalid for NER demographics.
-- 😶 **Cultural stigma** causes over 90% of families to dismiss early memory loss as normal aging (*"বুঢ়া বয়সৰ পাহৰণি"*), resulting in diagnosis only at advanced Stage 3 or 4.
-- 📱 **No existing app** offers offline-first operation, multilingual Assamese voice guidance, and culturally grounded cognitive exercises for NER elderly patients.
+## 2. Project overview
 
----
+Smriti is a mobile-first web app (installable PWA) with two portals:
 
-## 3. Proposed Solution
+- **Patient portal**: large-button PIN login, today's schedule read aloud, five culturally familiar memory games, a family photo "Memory Bank", and an **AI companion chat** that answers questions such as *"Who is my doctor?"* or *"Which medicine now?"* from the patient's own records, in the patient's language.
+- **Caregiver portal**: patient roster with adherence %, per-patient record with a cognitive health score and game telemetry, overdue-reminder alerts, and forms to add patients, reminders and photos.
 
-**Smriti** is a resilient **3-Tier Delivery Ecosystem**:
+A WhatsApp webhook lets patients reply "Done" to a reminder, and a daily 09:00 job sends reminder messages (needs a Meta WhatsApp token, see [Status](#5-module-status)).
 
-| Tier | Channel | Reach |
-|---|---|---|
-| **Tier 1 (Core)** | Offline-first PWA + Meta WhatsApp AI companion bot | Any smartphone, even 2G |
-| **Tier 2 (Fallback)** | IVR automated voice calls + SMS alerts | Feature phones without internet |
-| **Tier 3 (Field Care)** | ASHA worker tablet mode with local sync | Door-to-door community screening |
+## 3. Objectives
 
-The platform delivers:
-1. 🎮 **5 culturally attuned cognitive games** targeting distinct neuroanatomical pathways using authentic NER assets (Kaji Nemu, Bhut Jolokia, Assamese Dhol, Pepa horn, Mekhela patterns).
-2. 🗣️ **Multilingual voice guidance** in Assamese (`as-IN`), Hindi (`hi-IN`), and English — with Google Gemini AI conversational companion.
-3. 📱 **Meta WhatsApp Cloud API bot** for automated medication reminders and bidirectional patient check-ins — zero new app learning curve.
-4. 🧠 **Live Machine Learning microservice** (Python + FastAPI on Render) for real-time adaptive game difficulty and longitudinal cognitive health scoring (0–100).
-5. 🩺 **Clinical Caregiver Dashboard** with 7-day adherence charts, red-flag overdue medication alerts, and exportable cognitive telemetry.
-6. 📶 **100% offline-first PWA** (Workbox + IndexedDB) — full functionality during complete internet outages.
-7. 🔐 **WebAuthn FIDO2 biometrics** — hardware fingerprint/face login without passwords, compliant with DPDP Act 2023.
+1. Give the patient one simple place for today's routine, read aloud in their language.
+2. Answer the patient's everyday questions with an LLM that is grounded in their real records, not invented facts.
+3. Keep memory active with short games whose difficulty adapts to the patient.
+4. Let a caregiver see adherence and warning signs at a glance.
+5. Keep working on poor networks (offline cache and queued actions).
 
----
+**Target users:** elderly people with early to moderate memory loss (primary), family caregivers and clinicians (secondary).
 
-## 4. Key Features
+## 4. Features, technology and AI
 
-| Feature | Description |
+| Area | What is used |
 |---|---|
-| 🔑 **Biometric Login** | Tactile 4-digit PIN + WebAuthn FIDO2 hardware fingerprint/face authentication |
-| 📅 **Horizon Routines** | Chronological daily schedule with audio read-aloud and 1-tap completion |
-| 🎮 **5 Cognitive Games** | Market Day Basket, Daily Routine Sequencer, Faces & Family Recall, Sound & Rhythm Match, Odd One Out |
-| 🤖 **Gemini AI Assistant** | Multimodal conversational assistant — text + voice, grounded in patient's live data |
-| 📲 **WhatsApp Bot** | Automated bilingual medication reminders with bidirectional patient sync |
-| 🧠 **Live ML Engine** | Adaptive difficulty + 0–100 cognitive health score + clinical status label |
-| 📸 **Memory Bank** | Family photo reminiscence vault with DPDP Act 2023 consent trails |
-| 🩺 **Caregiver Hub** | Real-time patient roster, red-flag alerts, reaction-time charts |
-| 📶 **Offline PWA** | Service worker pre-caching + IndexedDB queue + automatic background sync |
-| 🛡️ **DPDP Compliant** | Consent checkboxes, 30-day right to erasure, zero raw biometric storage |
+| Frontend | React 19, Vite 8, React Router 7, Tailwind CSS 4, i18next (English, Hindi, Assamese), Recharts, Lucide icons |
+| Offline | `vite-plugin-pwa` (Workbox service worker), IndexedDB queue (`idb`) |
+| Voice | Browser Web Speech API for read-aloud; MediaRecorder for voice questions |
+| Backend | Node.js, Express 5, Mongoose 9, JWT, bcryptjs, node-cron |
+| Database | MongoDB (Atlas in production, MongoDB 7 locally) |
+| **LLM** | **Google Gemini API** via `@google/genai`: prompts P1/P2 use the cascade `gemini-3.5-flash-lite → gemini-3.5-flash → gemini-flash-latest`; P3 (WhatsApp) uses `gemini-3.6-flash` |
+| ML (optional) | External FastAPI engine `dementia-ai-engine.onrender.com` for adaptive difficulty, health score and translation; built-in rule-based fallback when it is unreachable |
+| Messaging | Meta WhatsApp Cloud API (Graph API v20.0) |
+| Hosting | Vercel (frontend), Render (backend), MongoDB Atlas |
 
----
+### Prompts (final)
 
-## 5. Technology Stack
+| ID | Name | Where | Model |
+|---|---|---|---|
+| P1 | Patient Companion Chat | `backend/services/patientChatService.js` | Gemini cascade, temp 0.7, 350 tokens |
+| P2 | Voice Question (transcribe + reply) | same file, audio branch | same as P1 |
+| P3 | WhatsApp Companion Reply | `backend/services/aiService.js` | `gemini-3.6-flash`, default settings |
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | React 19.2, Vite 8.2, React Router v7, Tailwind CSS v4, Lucide React, i18next, Recharts |
-| **Offline PWA** | `vite-plugin-pwa`, Workbox Service Worker, IndexedDB (`idb`) |
-| **Voice & Speech** | Web Speech Synthesis API — Assamese, Hindi, English |
-| **Generative AI** | Google Gemini AI SDK (`@google/genai`) — multimodal text + voice |
-| **Machine Learning** | Python, Scikit-Learn, FastAPI — hosted on Render Cloud |
-| **Backend API** | Node.js, Express.js, Mongoose ODM, Node-Cron, bcrypt, JWT |
-| **Database** | MongoDB Atlas Cloud |
-| **APIs** | Meta WhatsApp Business Cloud API · Google OAuth 2.0 · Bhashini API (NER language TTS) |
-| **Security & Auth** | WebAuthn FIDO2 · bcrypt PIN hashing · DPDP Act 2023 |
-| **Deployment** | Vercel (Frontend) · Render (Backend & ML) · MongoDB Atlas (Database) |
+Full prompt sheets: [`prompts/final/`](prompts/final). Earlier versions: [`prompts/v1`](prompts/v1), [`v2`](prompts/v2), [`v3`](prompts/v3), taken from the git history of the original project.
 
----
+## 5. Module status
 
-## 6. Architecture
+Checked by running the app locally (MongoDB 7, seeded demo data) on 22 Nov 2026; details in [`test-data/`](test-data).
 
-```text
-                         ┌────────────────────────────────────┐
-                         │    Senior Patient / Family Caregiver│
-                         └──────────┬──────────────┬──────────┘
-                                    │              │
-               React 19 PWA (Offline-First + IDB)  WhatsApp (Meta Cloud API)
-                                    │              │
-                                    ▼              ▼
-                         ┌──────────────────────────────────────────┐
-                         │         Express.js REST & Webhook API     │
-                         │  ├─ JWT & WebAuthn FIDO2 Auth             │
-                         │  ├─ Dynamic Routine & Alert Engine        │
-                         │  ├─ Cognitive Telemetry Logging           │
-                         │  ├─ ML Service Proxy & Fallback Wrapper   │
-                         │  └─ Node-Cron Reminder Scheduler          │
-                         └────────┬───────────────┬──────────────┬──┘
-                                  │               │              │
-                                  ▼               ▼              ▼
-                         ┌────────────────┐ ┌──────────────┐ ┌──────────────────┐
-                         │  MongoDB Atlas │ │ Google Gemini│ │  ML Engine (AI)  │
-                         │  · Patients   │ │ · Generative │ │  · Adaptive Diff.│
-                         │  · Reminders  │ │   Companion  │ │  · Health Score  │
-                         │  · GameLogs   │ │ · Voice Audio│ │  (Render Cloud)  │
-                         │  · Caregivers │ └──────────────┘ └──────────────────┘
-                         └────────────────┘
-```
+| Module | What it does | Status | Notes |
+|---|---|---|---|
+| Patient login | Name + 4-digit PIN, JWT session | Working | Wrong-PIN bypass fixed in Milestone 2. Name is case-sensitive (test T03 fails). |
+| Daily schedule & reminders | 10 timed items, tap to complete, read aloud | Working | |
+| Cognitive games (5) | Market Day Basket, Daily Routine Sequencer, Faces & Family Recall, Sound & Rhythm Match, Odd One Out | Working | Routine Sequencer "0 cards" bug fixed in Milestone 2. 6 more games are "coming soon" tiles only. |
+| Adaptive difficulty | Next level from reaction time and mistakes | Working (rule-based fallback) | External ML engine not reachable from our test environment; fallback rules used. |
+| Family Memory Bank | Photo gallery with stories | Working | |
+| AI companion chat (P1) | Answers questions from the patient's records | Partly working | Chat window, API and offline keyword fallback verified. Gemini replies not yet verified: no Gemini key in the test environment. |
+| Voice question (P2) | Speak instead of type | Not tested | Needs a microphone and a Gemini key. |
+| Caregiver dashboard | Roster, adherence, alerts, patient record, telemetry | Working | |
+| Caregiver Google login | Google OAuth | Not tested | Needs a Google OAuth client ID. |
+| WhatsApp bot (P3) | 09:00 reminders, "Done" replies, AI replies | Partly working | Incoming "Done" marks the reminder (tested with Meta-format payloads). Sending needs a Meta token. |
+| Offline PWA | Works with the network off | Working | Tested by switching the browser offline. |
+| Languages | English / Hindi / Assamese UI | Working | Hindi reminder-title bug fixed in Milestone 2. |
+| Translation & TTS service | Assamese text via ML engine | Fallback only | Returns the original text when the engine is unreachable. |
 
----
+## 6. Run locally
 
-## 7. Repository Structure
-
-```text
-Smriti/
-├── README.md
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── patient/          # Patient portal + 5 cognitive games
-│   │   │   └── caregiver/        # Caregiver dashboard + telemetry
-│   │   ├── services/             # API service layer (api.js)
-│   │   ├── context/              # Auth & patient context providers
-│   │   └── utils/                # speechUtils, gameHelpers
-│   ├── index.html
-│   └── vite.config.js
-├── backend/
-│   ├── server.js                 # Express entry point + keep-alive pinger
-│   ├── routes/                   # patientRoutes, caregiverRoutes, gameRoutes
-│   ├── models/                   # Mongoose schemas (Patient, Caregiver, GameSession)
-│   ├── services/                 # mlService.js, translationService.js
-│   ├── jobs/                     # reminderCron.js (Node-Cron scheduler)
-│   └── middleware/               # JWT auth, rate limiting
-└── docs/
-    └── screenshots/              # UI gallery — all 18 screens
-```
-
----
-
-## 8. Final Presentation
-
-📊 The project presentation (PPT) is available on Google Drive (access: **Anyone with the link — Viewer**).
-
-> **[📥 View Presentation on Google Drive](https://docs.google.com/file/d/1ZMWVouCgjB8nl_J1NueILKSQ3ZTZmB5A/view)**
-
----
-
-## 9. Demo Video
-
-🎬 A full product walkthrough demo video is available on YouTube.
-
-> **[▶️ Watch Demo Video on YouTube](https://youtu.be/TTV7cAvSF-s)**
-
----
-
-## 10. Screenshots / Prototype Photos
-
-### 👴 Patient Portal
-
-| **Tactile PIN & Biometric Login** | **Horizon Dashboard** |
-|:---:|:---:|
-| ![Patient Login](docs/screenshots/01_patient_login.png) | ![Patient Dashboard](docs/screenshots/02_patient_dashboard.png) |
-| *4-digit PIN with audio feedback + WebAuthn FIDO2 biometrics* | *Time-aware greeting, state horizon banner, spotlight routine* |
-
-| **Chronological Routine Schedule** | **Family Reminiscence Memory Vault** |
-|:---:|:---:|
-| ![Patient Reminders](docs/screenshots/03_patient_reminders.png) | ![Memory Bank](docs/screenshots/10_patient_family_vault.png) |
-| *Morning-to-night care schedule with audio read-aloud & 1-tap checks* | *Photo reminiscence gallery for facial recall & kinship memory* |
-
-| **Patient Profile & Emergency Info** | **DPDP Act 2023 Privacy Policy** |
-|:---:|:---:|
-| ![Patient Profile](docs/screenshots/11_patient_profile.png) | ![Privacy Policy](docs/screenshots/18_privacy_policy.png) |
-| *Emergency dialers, blood group & regional language toggles* | *Full DPDP Act 2023 compliance — consent trails & rights* |
-
----
-
-### 🎮 Cognitive Games Suite
-
-| **Games Suite Hub** | **Market Day Basket (বজাৰৰ পাচি)** |
-|:---:|:---:|
-| ![Games Suite](docs/screenshots/04_patient_games_suite.png) | ![Market Day Basket](docs/screenshots/05_game_market_day_basket.png) |
-| *Central launcher with streak tracking & category tabs* | *Working memory recall of regional produce (Kaji Nemu, Bhut Jolokia)* |
-
-| **Daily Routine Sequencer (दैनिक दिनचर्या)** | **Faces & Family Recall (चेहरे और यादें)** |
-|:---:|:---:|
-| ![Routine Sequencer](docs/screenshots/06_game_daily_routine_sequencer.png) | ![Faces Recall](docs/screenshots/07_game_faces_family_recall.png) |
-| *Executive function — sequencing familiar morning-to-night routines* | *Fusiform gyrus stimulation — matching real family photos & kin* |
-
-| **Sound & Rhythm Match (ध्वनि और लय)** | **Odd One Out (अलग पहचानें)** |
-|:---:|:---:|
-| ![Sound Match](docs/screenshots/08_game_sound_rhythm_match.png) | ![Odd One Out](docs/screenshots/09_game_odd_one_out.png) |
-| *Auditory attention — indigenous instruments (Dhol, Pepa, Shankha)* | *Semantic categorization — identifying botanical anomalies* |
-
----
-
-### 🩺 Caregiver & Clinician Dashboard
-
-| **Caregiver Login** | **Command Center & Patient Roster** |
-|:---:|:---:|
-| ![Caregiver Login](docs/screenshots/12_caregiver_login.png) | ![Caregiver Dashboard](docs/screenshots/13_caregiver_dashboard.png) |
-| *Email/password, Google OAuth & WebAuthn clinician biometrics* | *Real-time patient roster with clinical status & adherence metrics* |
-
-| **Patient Clinical Dossier & Telemetry** | **Cognitive Games Telemetry** |
-|:---:|:---:|
-| ![Patient Detail](docs/screenshots/14_caregiver_patient_detail.png) | ![Game Telemetry](docs/screenshots/15_caregiver_cognitive_games.png) |
-| *AI Cognitive Health scoring, 7-day adherence charts* | *Round-by-round precision, reaction time & level history* |
-
-| **Red Flag Alerts & Action Center** | **Caregiver Settings & Profile** |
-|:---:|:---:|
-| ![Caregiver Notifications](docs/screenshots/16_caregiver_notifications.png) | ![Caregiver Profile](docs/screenshots/17_caregiver_profile.png) |
-| *Real-time alerts for missed critical medications + 1-tap dialer* | *Profile management, preferences & 30-day erasure controls* |
-
----
-
-## 11. Installation
+Requirements: Node.js 18+ (tested on 22), MongoDB (local or Atlas).
 
 ```bash
-git clone https://github.com/gopalrajlohiya11-ui/Smriti.git
-cd Smriti
-
-# Backend
-cd backend && npm install
-
-# Frontend
-cd ../frontend && npm install
+git clone https://github.com/Tamanna-57/smriti.git
+cd smriti
 ```
 
-**`backend/.env`**
-```env
-PORT=5000
-NODE_ENV=development
-MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/Smriti
-JWT_SECRET=your_jwt_super_secret_key_here
-GEMINI_API_KEY=your_google_gemini_api_key
-GOOGLE_CLIENT_ID=your_google_oauth_client_id
-WHATSAPP_TOKEN=your_meta_whatsapp_token
-WHATSAPP_PHONE_NUMBER_ID=your_phone_number_id
-WHATSAPP_VERIFY_TOKEN=your_verify_token
-```
-
-**`frontend/.env`**
-```env
-VITE_API_URL=http://localhost:5000/api
-VITE_GOOGLE_CLIENT_ID=your_google_oauth_client_id
-```
-
----
-
-## 12. Run
+**Backend**
 
 ```bash
-# Terminal 1 — Backend
 cd backend
-node seed.js   # First time only — seeds demo data
-npm start      # http://localhost:5000
-
-# Terminal 2 — Frontend
-cd frontend
-npm run dev    # http://localhost:5173
+npm ci
+cp .env.example .env        # then edit MONGO_URI, JWT_SECRET, GEMINI_API_KEY
+node seed.js                # wipes the database and creates the demo accounts
+npm start                   # http://localhost:5000  (health: /api/health)
 ```
 
-### ☁️ Live Deployments
+**Frontend** (second terminal)
 
-| Service | URL |
-|---|---|
-| 🌐 **Live Web App** | [smriti-puce.vercel.app](https://smriti-puce.vercel.app) |
-| ⚙️ **Backend API** | [smriti-backend-nwrl.onrender.com](https://smriti-backend-nwrl.onrender.com/api/health) |
-| 🧠 **Live ML Engine** | [dementia-ai-engine.onrender.com](https://dementia-ai-engine.onrender.com/docs) |
-| 💻 **ML Engine Source** | [github.com/adityaraichauhan/Dementia-AI-engine](https://github.com/adityaraichauhan/Dementia-AI-engine) |
-| 📱 **WhatsApp Bot** | [wa.me/15556680031](https://wa.me/15556680031?text=Hi%20Smriti) |
+```bash
+cd frontend
+npm ci
+echo "VITE_API_URL=http://localhost:5000/api" > .env
+npm run dev                 # http://localhost:5173
+```
 
----
+No MongoDB installed? `docker run -d -p 27017:27017 mongo:7` and use `MONGO_URI=mongodb://localhost:27017/smriti`.
 
-## 13. Future Scope
+### Environment variables
 
-| Phase | Milestone |
-|---|---|
-| 🏥 **Phase 1** | Government Tele-MANAS (14416) integration — automatic specialist referrals from remote NER districts |
-| 👩‍⚕️ **Phase 2** | ASHA & Frontline Worker Tablet Suite with voice prompts in Bodo, Khasi, Garo, Mizo, Meitei, Nagamese |
-| 🎙️ **Phase 3** | Acoustic Speech Biomarker Analysis via openSMILE — micro-cognitive decline detection from voice patterns |
-| ⌚ **Phase 4** | Wearable PPG & Vascular Risk Telemetry — Bluetooth smart band integration for continuous BP/HR monitoring |
-| 🎮 **Phase 5** | 6 additional cognitive games — Village Path Navigator, Spice Sorter, Proverb Completer, and more |
-| 🔬 **Phase 6** | Multi-centric ICMR & ARDSI clinical validation trials — 500+ NER patients over 12 months |
+| Variable | Where | Needed for | Required |
+|---|---|---|---|
+| `MONGO_URI` | backend | everything | yes |
+| `JWT_SECRET` | backend | login tokens (falls back to a built-in value; set your own) | yes in production |
+| `GEMINI_API_KEY` | backend | AI chat P1/P2, WhatsApp P3 (without it: offline fallback replies) | for AI |
+| `TZ` | backend | reminder times (`Asia/Kolkata`) | on Render |
+| `DEMO_SEED` | backend | `if-empty` / `daily`: auto-seed demo data on a demo database | hosted demo |
+| `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN` | backend | WhatsApp bot | for WhatsApp |
+| `GOOGLE_CLIENT_ID` | backend | caregiver Google login | optional |
+| `ML_SERVICE_URL` | backend | external ML engine (default `https://dementia-ai-engine.onrender.com`) | optional |
+| `VITE_API_URL` | frontend (build time) | backend address, e.g. `https://smriti-api-9lj6.onrender.com/api` | yes |
+| `VITE_GOOGLE_CLIENT_ID` | frontend | Google login button | optional |
 
----
+Never commit `.env` files; they are in `.gitignore`.
 
-## Team
+### Tests
 
-<div align="center">
+```bash
+node code/run_api_tests.js          # 19 API cases → test-data/outputs/api_test_results*.md
+node code/run_whatsapp_test.js      # WhatsApp webhook with Meta-format payloads
+node code/run_ui_tests.js           # 5 browser tests (needs Playwright + vite preview on :4173)
+node code/prompt_experiments.js     # P1 v1/v2/v3 comparison (needs a Gemini key)
+```
 
-**Team Design Divas** — Smart India Hackathon 2026 · SIH26003 · ITNS, NSUT New Delhi
+## 7. Deployment
 
-| # | Name |
-|:---:|:---|
-| 1 | **Gopal Raj Lohiya** |
-| 2 | **Aditya Rai Chauhan** |
-| 3 | **Mahir Kumar** |
-| 4 | **Hitarth Garg** |
-| 5 | **Mehak** |
-| 6 | **Diya Gautam** |
+- **Backend → Render** (`render.yaml`): service `smriti-api`, build `cd backend && npm ci`, start `cd backend && npm start`, env `MONGO_URI`, `JWT_SECRET`, `GEMINI_API_KEY`, `TZ=Asia/Kolkata`, `DEMO_SEED=daily`.
+- **Database → MongoDB Atlas** free M0 cluster; Network Access `0.0.0.0/0` (Render has no fixed IP).
+- **Frontend → Vercel**: import this repo; the root `vercel.json` builds `frontend/` to `frontend/dist`. Set `VITE_API_URL=https://smriti-api-9lj6.onrender.com/api` before the first build.
 
-</div>
+Step-by-step: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
----
+## 8. Architecture
 
-<div align="center">
-  <b>🌸 Smriti (স্মৃতি / स्मृति) — Preserving Memories, Empowering Caregivers, Culturally Grounded.</b>
-</div>
+![System architecture](docs/diagrams/01_system_architecture.png)
+
+More diagrams: [prompt workflow](docs/diagrams/02_prompt_workflow.png), [task decomposition](docs/diagrams/03_task_decomposition.png), [input-output flow](docs/diagrams/04_input_output_flow.png). Written description: [`docs/architecture/`](docs/architecture).
+
+## 9. Repository structure
+
+```text
+smriti/
+├── README.md
+├── CHANGELOG.md                 dated changes made for Milestone 2
+├── LICENSE                      MIT, original authors
+├── frontend/                    React PWA (unchanged layout)
+├── backend/                     Express API, models, routes, services, seed.js
+├── prompts/
+│   ├── v1/ v2/ v3/              P1 versions from the project's git history
+│   └── final/                   P1, P2, P3 prompt sheets
+├── code/                        test runners, prompt experiment, ML-engine utility
+├── test-data/
+│   ├── inputs/                  test cases
+│   └── outputs/                 saved real responses and result tables
+├── docs/
+│   ├── architecture/            architecture notes
+│   ├── diagrams/                Mermaid sources + PNG/SVG
+│   ├── screenshots/             original 18 screens + milestone2/ test screenshots
+│   ├── original_project/        SIH 2026 documents and the original README
+│   ├── DEPLOYMENT.md
+│   ├── Reel_Script.md
+│   ├── Milestone2.pdf
+│   └── Technical_Report.pdf
+├── render.yaml  vercel.json  deploy.sh
+└── .gitignore
+```
+
+## 10. Team
+
+| Name | Enrollment no. | Role |
+|---|---|---|
+| Tamanna Arora | `<ENROLLMENT_NO>` | `<ROLE>` |
+| `<MEMBER_NAME>` | `<ENROLLMENT_NO>` | `<ROLE>` |
+
+Team ID: `<TEAM_ID>` · Team name: `<TEAM_NAME>` · Batch: `<BATCH>` · Faculty: `<FACULTY_NAME>`
+
+## 11. Acknowledgement and licence
+
+Smriti was designed and built by **Team Design Divas** (Gopal Raj Lohiya, Aditya Rai Chauhan, Mahir Kumar, Hitarth Garg, Mehak, Diya Gautam) for Smart India Hackathon 2026, problem statement SIH26003, at https://github.com/gopalrajlohiya11-ui/Smriti. This repository keeps that project's full commit history and authorship. The work added for Milestone 2 (bug fixes, tests, prompt documentation, deployment changes, documents) is listed in [`CHANGELOG.md`](CHANGELOG.md) and appears as separate commits. The ML engine is a separate project: https://github.com/adityaraichauhan/Dementia-AI-engine.
+
+The original README declared an MIT licence but had no licence file; [`LICENSE`](LICENSE) adds the MIT text with the original authors as copyright holders.
