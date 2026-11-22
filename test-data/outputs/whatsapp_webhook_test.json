@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "ranAt": "2026-11-22T14:40:08.357Z",
+    "apiBase": "http://localhost:5000/api",
+    "note": "Replies are generated but cannot be delivered without WHATSAPP_TOKEN (Graph API answers HTTP 403); see backend log."
+  },
+  "results": [
+    {
+      "id": "W1",
+      "type": "Normal",
+      "input": "WhatsApp from 919435012345: 'Done, I took my medicine'",
+      "expected": "HTTP 200; pending medicine reminder marked acknowledged",
+      "actual": "HTTP 200; \"Night Routine & Rest\" acknowledged: false → true",
+      "result": "Pass"
+    },
+    {
+      "id": "W2",
+      "type": "Edge",
+      "input": "Same message from unknown number 15550001111",
+      "expected": "HTTP 200 (Meta needs it); no patient's reminders change",
+      "actual": "HTTP 200; Ramesh's medicine reminders unchanged: true",
+      "result": "Pass"
+    }
+  ]
+}
