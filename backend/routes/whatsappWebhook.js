@@ -108,7 +108,8 @@ router.post('/incoming', async (req, res) => {
           $or: [
             { phoneNumber: fromNumber },
             { phoneNumber: `+${fromNumber}` },
-            { phoneNumber: { $regex: fromNumber.slice(-10) + '$' } }
+            // Last 10 digits, allowing spaces/dashes between them for records saved as '+91 94350 12345'
+            { phoneNumber: { $regex: fromNumber.slice(-10).split('').join('\\D*') + '$' } }
           ]
         });
       }

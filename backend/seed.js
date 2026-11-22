@@ -77,7 +77,7 @@ async function seedCleanDemoData() {
       name: 'Ramesh Sharma',
       age: 74,
       gender: 'Male',
-      phoneNumber: '+91 94350 12345',
+      phoneNumber: '919435012345', // digits only, same format POST /api/patients stores
       pin: hashedPin,
       tier: 1,
       language: 'Assamese',
@@ -98,7 +98,7 @@ async function seedCleanDemoData() {
       name: 'Meera Baruah',
       age: 68,
       gender: 'Female',
-      phoneNumber: '+91 98640 11223',
+      phoneNumber: '919864011223', // digits only, same format POST /api/patients stores
       pin: hashedPin,
       tier: 2,
       language: 'Khasi',
