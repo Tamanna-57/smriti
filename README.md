@@ -173,6 +173,7 @@ smriti/
 │   ├── DEPLOYMENT.md
 │   ├── Reel_Script.md
 │   ├── Milestone2.pdf
+│   ├── Synopsis.md / Synopsis.pdf   supporting document (synopsis)
 │   └── Technical_Report.pdf
 ├── render.yaml  vercel.json  deploy.sh
 └── .gitignore

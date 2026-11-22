@@ -2,6 +2,7 @@
 /**
  * Builds the two Milestone 2 PDFs from the repository's own files:
  *   docs/Technical_Report.pdf  (supporting document, 2 pages)
+ *   docs/Synopsis.pdf          (alternative supporting document, from docs/Synopsis.md)
  *   docs/Milestone2.pdf        (7 sections in the order the college requires)
  * and copies them to the submission names:
  *   docs/M2_<TeamID>_Smriti.pdf and docs/<TeamName>_TechnicalReport.pdf
@@ -134,6 +135,34 @@ const techReport = `
 <h3>10. Future improvements</h3>
 <p>Restore the dose-safety rule as P1 v4 and re-measure; record test clips for P2; require auth on all write routes; case-insensitive login; connect a WhatsApp Business number; validate with caregivers.</p>
 `;
+
+// ── Synopsis (alternative supporting document), from docs/Synopsis.md ────────
+function mdToHtml(md) {
+  const inline = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/`(.+?)`/g, '<code>$1</code>');
+  const out = []; let list = null; let para = [];
+  const flush = () => { if (para.length) { out.push(`<p>${inline(para.join(' '))}</p>`); para = []; } if (list) { out.push(`</${list}>`); list = null; } };
+  for (const line of md.split('\n')) {
+    let m;
+    if (!line.trim()) { flush(); continue; }
+    if ((m = line.match(/^# (.*)/))) { flush(); out.push(`<h1>${inline(m[1])}</h1>`); continue; }
+    if ((m = line.match(/^## (.*)/))) { flush(); out.push(`<h3>${inline(m[1])}</h3>`); continue; }
+    if ((m = line.match(/^(?:- |\d+\. )(.*)/))) {
+      const tag = /^\d/.test(line) ? 'ol' : 'ul';
+      if (para.length) { out.push(`<p>${inline(para.join(' '))}</p>`); para = []; }
+      if (list !== tag) { if (list) out.push(`</${list}>`); out.push(`<${tag}>`); list = tag; }
+      out.push(`<li>${inline(m[1])}</li>`); continue;
+    }
+    if (line.startsWith('@@HTML@@')) { flush(); out.push(line.slice(8)); continue; }
+    para.push(line.trim());
+  }
+  flush();
+  return out.join('\n');
+}
+const synopsis = mdToHtml(rd('docs/Synopsis.md')
+  .replace('{{TEAM_LINE}}', `@@HTML@@<p class="small">${ph(team.teamName)} · ${ph(team.teamId)} · SCSE4041 Mini Project, Milestone 2 · Prototype: ${ph(team.prototypeUrl)} · Repository: ${esc(team.repoUrl)}</p>`)
+  .replace('{{TEST_SUMMARY}}', `We wrote ${tests.length} test cases: ${tests.length - nEdge - nInvalid} normal inputs, ${nEdge} edge cases and ${nInvalid} invalid or broken ones (wrong PIN, empty message, a forged login token, the server for translations being offline, and so on). In the latest run ${nPass} passed and ${tests.length - nPass} failed, and we report the failures as they are rather than tuning the tests until everything is green.`));
+const supportingIsSynopsis = String(team.supportingDocument || 'synopsis').toLowerCase().startsWith('syn');
+const supportingHtml = supportingIsSynopsis ? synopsis : techReport;
 
 // ── Milestone 2 PDF ─────────────────────────────────────────────────────────
 const promptSheet = (id, name, rows, sys, user, sample) => `
@@ -273,7 +302,8 @@ ${exists('docs/screenshots/milestone2/repository.png') ? `<figure><img src="${im
 <p>Repository: ${esc(team.repoUrl)} (public). It contains the full Smriti code (frontend/, backend/) with the original team's 158 commits kept, plus the Milestone 2 commits by Tamanna Arora on 22 Nov 2026: six bug fixes, deployment changes, test runners (code/), saved test inputs and outputs (test-data/), prompt versions v1–v3 and final sheets P1–P3 (prompts/), diagrams, screenshots and these PDFs (docs/). CHANGELOG.md lists every change with its commit.</p>
 
 <h2 class="break">6. Supporting document</h2>
-${techReport}
+<p class="small">Document type: ${supportingIsSynopsis ? 'Synopsis' : 'Technical report'} (the same PDF is uploaded separately).</p>
+${supportingHtml}
 
 <h2 class="break">7. Team contribution</h2>
 <table><tr><th>Member name</th><th>Enrollment no.</th><th>Role</th><th style="width:34%">Tasks done in Milestone 2</th><th>Evidence</th><th>Contribution (%)</th></tr>${membersRows}</table>
@@ -291,14 +321,16 @@ ${techReport}
     console.log('wrote', out);
   };
   await make(techReport, 'docs/Technical_Report.pdf', 'Smriti · Technical Report');
+  await make(synopsis, 'docs/Synopsis.pdf', 'Smriti · Synopsis');
   await make(m2, 'docs/Milestone2.pdf', 'Smriti · Milestone 2');
   await browser.close();
   const safe = (s) => String(s).replace(/[<>]/g, '').replace(/[^A-Za-z0-9_-]+/g, '');
   // Submission-named copies only once the team details are filled in
   if (!/^</.test(team.teamId) && !/^</.test(team.teamName)) {
     fs.copyFileSync(path.join(ROOT, 'docs/Milestone2.pdf'), path.join(ROOT, `docs/M2_${safe(team.teamId)}_Smriti.pdf`));
-    fs.copyFileSync(path.join(ROOT, 'docs/Technical_Report.pdf'), path.join(ROOT, `docs/${safe(team.teamName)}_TechnicalReport.pdf`));
-    console.log(`wrote docs/M2_${safe(team.teamId)}_Smriti.pdf and docs/${safe(team.teamName)}_TechnicalReport.pdf`);
+    const supName = supportingIsSynopsis ? 'Synopsis' : 'TechnicalReport';
+    fs.copyFileSync(path.join(ROOT, supportingIsSynopsis ? 'docs/Synopsis.pdf' : 'docs/Technical_Report.pdf'), path.join(ROOT, `docs/${safe(team.teamName)}_${supName}.pdf`));
+    console.log(`wrote docs/M2_${safe(team.teamId)}_Smriti.pdf and docs/${safe(team.teamName)}_${supName}.pdf`);
   } else {
     console.log('Team ID / name still placeholders: submission-named copies not written (edit docs/team_info.json).');
   }

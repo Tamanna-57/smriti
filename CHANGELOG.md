@@ -49,7 +49,8 @@ None of these features was newly developed in Milestone 2.
   `d44bf41`, checked character-for-character) and `prompts/final` (P1, P2, P3).
 - `docs/diagrams` (architecture, prompt workflow, task decomposition,
   input-output flow), `docs/screenshots/milestone2`, `docs/DEPLOYMENT.md`,
-  `docs/Reel_Script.md`, Technical Report and Milestone 2 PDFs.
+  `docs/Reel_Script.md`, Technical Report, Synopsis (`docs/Synopsis.md`) and
+  Milestone 2 PDFs.
 - `LICENSE` (MIT, as declared in the original README, original authors as
   copyright holders) and a new README with attribution.
 

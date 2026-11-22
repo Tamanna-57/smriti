@@ -1,5 +1,5 @@
 {
-  "_note": "Fill in every <...> value, then run: node code/build_pdfs.js. Percentages must add up to 100.",
+  "_note": "Fill in every <...> value, then run: node code/build_pdfs.js. Percentages must add up to 100. supportingDocument: 'synopsis' or 'technical_report' (goes in Section 6 and is the separate upload).",
   "teamId": "<TEAM_ID>",
   "teamName": "<TEAM_NAME>",
   "projectTitle": "Smriti: AI Memory Companion for Elderly Dementia Patients",
@@ -9,6 +9,7 @@
   "repoUrl": "https://github.com/Tamanna-57/smriti",
   "reelUrl": "<REEL_URL>",
   "reelSeconds": "<REEL_SECONDS>",
+  "supportingDocument": "synopsis",
   "milestone1Summary": "<What was submitted in Milestone 1 (idea, prompts, scope) — needed for 'what changed since Milestone 1'>",
   "members": [
     {
