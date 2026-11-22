@@ -361,7 +361,7 @@ export function AppProvider({ children }) {
             const std = (targetStdList && targetStdList.find(s => 
               s.id === r._id || 
               (s.type === r.type && (s.title === r.title || r.title?.includes(s.title?.split(' ')[0]))) ||
-              targetStdList[rIdx]?.type === r.type
+              (s === targetStdList[rIdx] && s.type === r.type)
             )) || targetStdList?.[rIdx];
 
             return {
