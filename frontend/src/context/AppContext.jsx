@@ -821,6 +821,12 @@ export function AppProvider({ children }) {
     } catch (err) {
       console.warn('Patient API login failed, checking fallback mode:', err.message);
 
+      // The server answered and rejected the name/PIN: never fall back to an offline session.
+      // Offline demo fallback is only for network failures (backend unreachable or timed out).
+      if (err.status && err.status >= 400 && err.status < 500) {
+        throw err;
+      }
+
       // If demo credentials or backend offline fallback for demo patients:
       if (isMeera || isRamesh) {
         const demoIndex = isMeera ? 1 : 0;

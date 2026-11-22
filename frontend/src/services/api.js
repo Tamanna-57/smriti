@@ -188,7 +188,11 @@ export async function loginPatientApi(name, age, pin, phoneNumber) {
       body: JSON.stringify({ name, age, pin, phoneNumber })
     }, 8000);
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Patient login failed');
+    if (!response.ok) {
+      const authErr = new Error(data.error || 'Patient login failed');
+      authErr.status = response.status;
+      throw authErr;
+    }
     return data;
   } catch (err) {
     console.error('Patient login API error:', err.message);
