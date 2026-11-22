@@ -63,3 +63,6 @@ None of these features was newly developed in Milestone 2.
 ### Deployment
 - Created Render web service `smriti-api` (https://smriti-api-9lj6.onrender.com)
   from this repository, Singapore region, free plan.
+- Created Vercel project `smriti-mini-project` linked to this repository, with
+  `VITE_API_URL` pointing at the Render API and Vercel Authentication limited to
+  preview deployments: https://smriti-mini-project.vercel.app

@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Prototype (web app) | **`<PROTOTYPE_URL>`**: Vercel deployment pending, see [Deployment](#7-deployment) |
+| Prototype (web app) | **https://smriti-mini-project.vercel.app** (Vercel) |
 | Backend API | https://smriti-api-9lj6.onrender.com (Render, free plan; first request after idle takes ~50 s) |
 | Repository | https://github.com/Tamanna-57/smriti |
 | Original project | https://github.com/gopalrajlohiya11-ui/Smriti (Team Design Divas, Smart India Hackathon 2026, PS SIH26003) |
@@ -139,7 +139,7 @@ node code/prompt_experiments.js     # P1 v1/v2/v3 comparison (needs a Gemini key
 
 - **Backend → Render** (`render.yaml`): service `smriti-api`, build `cd backend && npm ci`, start `cd backend && npm start`, env `MONGO_URI`, `JWT_SECRET`, `GEMINI_API_KEY`, `TZ=Asia/Kolkata`, `DEMO_SEED=daily`.
 - **Database → MongoDB Atlas** free M0 cluster; Network Access `0.0.0.0/0` (Render has no fixed IP).
-- **Frontend → Vercel**: import this repo; the root `vercel.json` builds `frontend/` to `frontend/dist`. Set `VITE_API_URL=https://smriti-api-9lj6.onrender.com/api` before the first build.
+- **Frontend → Vercel**: project `smriti-mini-project`, live at https://smriti-mini-project.vercel.app. The root `vercel.json` builds `frontend/` to `frontend/dist`; `VITE_API_URL=https://smriti-api-9lj6.onrender.com/api` is set in the project. Every push to `main` redeploys.
 
 Step-by-step: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
