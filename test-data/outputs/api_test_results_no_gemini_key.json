@@ -1,6 +1,6 @@
 {
   "meta": {
-    "ranAt": "2026-11-22T14:28:02.556Z",
+    "ranAt": "2026-11-22T14:45:31.401Z",
     "apiBase": "http://localhost:5000/api",
     "node": "v22.23.5",
     "label": "no_gemini_key"
@@ -24,14 +24,14 @@
       "actualBody": {
         "status": "ok",
         "message": "Patient login successful",
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZiMDJmYmYwNzZmMzAxMGUyODY1NTI3NiIsInBhdGllbnRJZCI6IjZiMDJmYmYwNzZmMzAxMGUyODY1NTI3NiIsIm5hbWUiOiJSYW1lc2ggU2hhcm1hIiwidHlwZSI6InBhdGllbnQiLCJpYXQiOjE3OTUzNTc2ODAsImV4cCI6MTgyNjg5MzY4MH0.lfBhRDZQPguOl6qI9P-b4pY8GneqGCy9aD4zi9Wnlro",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZiMDMwMDA1ODMyYTk1ZjlmYjY2NDNhNyIsInBhdGllbnRJZCI6IjZiMDMwMDA1ODMyYTk1ZjlmYjY2NDNhNyIsIm5hbWUiOiJSYW1lc2ggU2hhcm1hIiwidHlwZSI6InBhdGllbnQiLCJpYXQiOjE3OTUzNTg3MjgsImV4cCI6MTgyNjg5NDcyOH0.BQ0s7TPl18boJj_W_nCGd-UIVnAPXY-HcLTENDfitk8",
         "patient": {
-          "_id": "6b02fbf076f3010e28655276",
+          "_id": "6b030005832a95f9fb6643a7",
           "name": "Ramesh Sharma",
           "age": 74,
           "gender": "Male",
           "phoneNumber": "919435012345",
-          "pin": "$2b$10$1VeKSTwe4P8GoZ2nJ/KVS.5Je3cpZP6NCohIlq0GfYWJRUWz2ulNK",
+          "pin": "$2b$10$y.PAeA3pEdUXEMBokxWNP.73LD7nMDhqEGD2pKObqvlxzUJuwz7Ve",
           "tier": 1,
           "language": "Assamese",
           "location": "Guwahati, Assam",
@@ -41,18 +41,18 @@
           "notes": "Enjoys morning walks by Brahmaputra and Assam tea. Responds warmly to family photos and Assamese folk music.",
           "medicalNotes": "Mild Alzheimer's Disease, Hypertension. Morning Donepezil 5mg.",
           "avatar": "/avatars/ramesh_sharma.png",
-          "caregiverId": "6b02fbf076f3010e28655275",
+          "caregiverId": "6b030005832a95f9fb6643a6",
           "notificationPreference": "whatsapp",
           "isDemoSeed": true,
           "hasBiometric": false,
           "cognitiveHealthScore": 85,
           "clinicalStatus": "Stable",
           "recommendedDifficulty": 2,
-          "createdAt": "2026-11-22T14:28:00.254Z",
+          "createdAt": "2026-11-22T14:45:25.516Z",
           "__v": 0
         }
       },
-      "ms": 104,
+      "ms": 96,
       "result": "Pass"
     },
     {
@@ -69,12 +69,12 @@
       "expected": "HTTP 401 'Invalid name/phone number or PIN'",
       "check": "status",
       "expectStatus": 401,
-      "actualStatus": 429,
+      "actualStatus": 401,
       "actualBody": {
-        "error": "Too many login attempts. Please try again in 15 minute(s)."
+        "error": "Invalid name/phone number or PIN."
       },
-      "ms": 2,
-      "result": "Fail"
+      "ms": 94,
+      "result": "Pass"
     },
     {
       "id": "T03",
@@ -89,11 +89,11 @@
       "input": "Login: 'ramesh sharma' (lower case), PIN 1234",
       "expected": "Login succeeds: elderly users should not be locked out by capital letters",
       "check": "loginToken",
-      "actualStatus": 429,
+      "actualStatus": 401,
       "actualBody": {
-        "error": "Too many login attempts. Please try again in 15 minute(s)."
+        "error": "Invalid name/phone number or PIN."
       },
-      "ms": 3,
+      "ms": 5,
       "result": "Fail"
     },
     {
@@ -109,12 +109,12 @@
       "expected": "HTTP 400 'A 4-digit PIN is required'",
       "check": "status",
       "expectStatus": 400,
-      "actualStatus": 429,
+      "actualStatus": 400,
       "actualBody": {
-        "error": "Too many login attempts. Please try again in 15 minute(s)."
+        "error": "A 4-digit PIN is required"
       },
       "ms": 2,
-      "result": "Fail"
+      "result": "Pass"
     },
     {
       "id": "T05",
@@ -129,12 +129,40 @@
       "input": "Login: phone '+91 94350 12345', PIN 1234",
       "expected": "HTTP 200 with token (spaces and +91 ignored)",
       "check": "loginToken",
-      "actualStatus": 429,
+      "actualStatus": 200,
       "actualBody": {
-        "error": "Too many login attempts. Please try again in 15 minute(s)."
+        "status": "ok",
+        "message": "Patient login successful",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZiMDMwMDA1ODMyYTk1ZjlmYjY2NDNhNyIsInBhdGllbnRJZCI6IjZiMDMwMDA1ODMyYTk1ZjlmYjY2NDNhNyIsIm5hbWUiOiJSYW1lc2ggU2hhcm1hIiwidHlwZSI6InBhdGllbnQiLCJpYXQiOjE3OTUzNTg3MjksImV4cCI6MTgyNjg5NDcyOX0.o3YMzrs-QZ_AiTPR4mtbqIKiBOfZ-ajnsQ_SntWp2fE",
+        "patient": {
+          "_id": "6b030005832a95f9fb6643a7",
+          "name": "Ramesh Sharma",
+          "age": 74,
+          "gender": "Male",
+          "phoneNumber": "919435012345",
+          "pin": "$2b$10$y.PAeA3pEdUXEMBokxWNP.73LD7nMDhqEGD2pKObqvlxzUJuwz7Ve",
+          "tier": 1,
+          "language": "Assamese",
+          "location": "Guwahati, Assam",
+          "cognitiveStage": "Early Memory Support",
+          "primaryCaregiver": "Dr. Ananya Sharma",
+          "emergencyContact": "+91 98640 54321",
+          "notes": "Enjoys morning walks by Brahmaputra and Assam tea. Responds warmly to family photos and Assamese folk music.",
+          "medicalNotes": "Mild Alzheimer's Disease, Hypertension. Morning Donepezil 5mg.",
+          "avatar": "/avatars/ramesh_sharma.png",
+          "caregiverId": "6b030005832a95f9fb6643a6",
+          "notificationPreference": "whatsapp",
+          "isDemoSeed": true,
+          "hasBiometric": false,
+          "cognitiveHealthScore": 85,
+          "clinicalStatus": "Stable",
+          "recommendedDifficulty": 2,
+          "createdAt": "2026-11-22T14:45:25.516Z",
+          "__v": 0
+        }
       },
-      "ms": 2,
-      "result": "Fail"
+      "ms": 92,
+      "result": "Pass"
     },
     {
       "id": "T06",
@@ -151,7 +179,7 @@
       "actualBody": {
         "error": "Invalid or expired session token. Please log in again."
       },
-      "ms": 1,
+      "ms": 3,
       "result": "Pass"
     },
     {
@@ -175,7 +203,7 @@
         "preferredLanguage": "Assamese",
         "replySource": "fallback"
       },
-      "ms": 12,
+      "ms": 165,
       "result": "Pass"
     },
     {
@@ -199,7 +227,7 @@
         "preferredLanguage": "Assamese",
         "replySource": "fallback"
       },
-      "ms": 13,
+      "ms": 81,
       "result": "Pass"
     },
     {
@@ -223,7 +251,7 @@
         "preferredLanguage": "Assamese",
         "replySource": "fallback"
       },
-      "ms": 10,
+      "ms": 62,
       "result": "Pass"
     },
     {
@@ -247,7 +275,7 @@
         "preferredLanguage": "Assamese",
         "replySource": "fallback"
       },
-      "ms": 8,
+      "ms": 67,
       "result": "Pass"
     },
     {
@@ -271,7 +299,7 @@
         "preferredLanguage": "Assamese",
         "replySource": "fallback"
       },
-      "ms": 7,
+      "ms": 68,
       "result": "Fail"
     },
     {
@@ -291,7 +319,7 @@
       "actualBody": {
         "error": "A message text or audio recording is required."
       },
-      "ms": 1,
+      "ms": 2,
       "result": "Pass"
     },
     {
@@ -314,7 +342,7 @@
         "reasoning": "Rule-based evaluation: Excellent accuracy and fast response time detected. Increasing difficulty tier.",
         "source": "rule_fallback"
       },
-      "ms": 246,
+      "ms": 251,
       "result": "Pass"
     },
     {
@@ -352,7 +380,7 @@
       "actualStatus": 200,
       "actualBody": {
         "status": "ok",
-        "patientId": "6b02fbf076f3010e28655276",
+        "patientId": "6b030005832a95f9fb6643a7",
         "patientName": "Ramesh Sharma",
         "cognitiveHealthScore": 50,
         "clinicalStatus": "Significant Decline - Alert Doctor",
@@ -365,7 +393,7 @@
         "recommendedDifficulty": 2,
         "aiReasoning": "Patient maintains regular cognitive engagement with fast reaction speeds. Adaptive difficulty calibrated for cognitive maintenance."
       },
-      "ms": 41,
+      "ms": 52,
       "result": "Pass"
     },
     {
@@ -389,7 +417,7 @@
         "source": "fallback_original",
         "error": "Request failed with status code 403"
       },
-      "ms": 280,
+      "ms": 281,
       "result": "Pass"
     },
     {
@@ -404,7 +432,7 @@
       "expectStatus": 403,
       "actualStatus": 403,
       "actualBody": "Forbidden",
-      "ms": 1,
+      "ms": 3,
       "result": "Pass"
     },
     {
@@ -432,7 +460,7 @@
         "status": "ok",
         "message": "Game session recorded successfully with ML engine insights",
         "session": {
-          "patientId": "6b02fbf076f3010e28655276",
+          "patientId": "6b030005832a95f9fb6643a7",
           "gameType": "odd-one-out",
           "title": "Odd One Out",
           "category": "Visual & Category Discrimination",
@@ -445,8 +473,8 @@
           "aiDifficulty": 2,
           "aiReasoning": "Rule-based evaluation: Steady performance maintained. Keeping current level.",
           "aiSource": "rule_fallback",
-          "_id": "6b02fbf181e65178d495982f",
-          "timestamp": "2026-11-22T14:28:01.676Z",
+          "_id": "6b03000ac083ad641a281879",
+          "timestamp": "2026-11-22T14:45:30.529Z",
           "__v": 0
         },
         "routineUpdated": false,
@@ -491,7 +519,7 @@
         "status": "ok",
         "message": "Game session recorded successfully with ML engine insights",
         "session": {
-          "patientId": "6b02fbf076f3010e28655276",
+          "patientId": "6b030005832a95f9fb6643a7",
           "gameType": "odd-one-out",
           "title": "Odd One Out",
           "category": "Visual & Category Discrimination",
@@ -504,8 +532,8 @@
           "aiDifficulty": 3,
           "aiReasoning": "Rule-based evaluation: Excellent accuracy and fast response time detected. Increasing difficulty tier.",
           "aiSource": "rule_fallback",
-          "_id": "6b02fbf281e65178d4959830",
-          "timestamp": "2026-11-22T14:28:02.259Z",
+          "_id": "6b03000bc083ad641a28187a",
+          "timestamp": "2026-11-22T14:45:31.108Z",
           "__v": 0
         },
         "routineUpdated": false,
@@ -528,7 +556,7 @@
           }
         }
       },
-      "ms": 582,
+      "ms": 576,
       "result": "Fail"
     }
   ]

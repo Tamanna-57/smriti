@@ -1,0 +1,31 @@
+{
+  "_note": "Fill in every <...> value, then run: node code/build_pdfs.js. Percentages must add up to 100.",
+  "teamId": "<TEAM_ID>",
+  "teamName": "<TEAM_NAME>",
+  "projectTitle": "Smriti: AI Memory Companion for Elderly Dementia Patients",
+  "batch": "<BATCH>",
+  "faculty": "<FACULTY_NAME>",
+  "prototypeUrl": "<PROTOTYPE_URL>",
+  "repoUrl": "https://github.com/Tamanna-57/smriti",
+  "reelUrl": "<REEL_URL>",
+  "reelSeconds": "<REEL_SECONDS>",
+  "milestone1Summary": "<What was submitted in Milestone 1 (idea, prompts, scope) — needed for 'what changed since Milestone 1'>",
+  "members": [
+    {
+      "name": "Tamanna Arora",
+      "enrollment": "<ENROLLMENT_NO>",
+      "role": "<ROLE>",
+      "tasks": "Ran and audited the prototype; found and fixed 6 bugs (seed crash, wrong-PIN login, Routine Sequencer, WhatsApp phone match, Hindi titles, rate limit); wrote API/UI/WhatsApp tests and the prompt experiment; documented prompts v1–v3 and P1–P3; set up repository and Render deployment",
+      "evidence": "Commits by Tamanna Arora on 22 Nov 2026 (see CHANGELOG.md); code/run_api_tests.js; prompts/final/",
+      "percent": "<%>"
+    },
+    {
+      "name": "<MEMBER_NAME>",
+      "enrollment": "<ENROLLMENT_NO>",
+      "role": "<ROLE>",
+      "tasks": "<SPECIFIC TASKS>",
+      "evidence": "<FILE / COMMIT / PROMPT ID>",
+      "percent": "<%>"
+    }
+  ]
+}

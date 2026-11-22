@@ -1,6 +1,6 @@
 # WhatsApp webhook test (simulated Meta payloads)
 
-Run at 2026-11-22T14:40:08.357Z. Replies are generated but cannot be delivered without WHATSAPP_TOKEN (Graph API answers HTTP 403); see backend log.
+Run at 2026-11-22T14:45:32.215Z. Replies are generated but cannot be delivered without WHATSAPP_TOKEN (Graph API answers HTTP 403); see backend log.
 
 | Test | Input | Type | Expected | Actual | Pass / Fail |
 |---|---|---|---|---|---|

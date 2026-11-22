@@ -1,6 +1,6 @@
 {
   "meta": {
-    "ranAt": "2026-11-22T14:40:08.357Z",
+    "ranAt": "2026-11-22T14:45:32.215Z",
     "apiBase": "http://localhost:5000/api",
     "note": "Replies are generated but cannot be delivered without WHATSAPP_TOKEN (Graph API answers HTTP 403); see backend log."
   },
