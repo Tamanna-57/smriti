@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const Caregiver = require('./models/Caregiver');
-const Patient = require('./models/Patient');
+const Patient = require('./models/patient');
 const Reminder = require('./models/Reminder');
 const GameSession = require('./models/GameSession');
 const ChatMessage = require('./models/ChatMessage');
