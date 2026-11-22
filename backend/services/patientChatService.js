@@ -262,6 +262,7 @@ REPLY: <your warm response to me in ${preferredLanguage}>`
     // 5. Invoke Gemini with Multi-Model Fallback cascade
     let replyText = null;
     let lastError = null;
+    let replySource = 'fallback';
 
     for (const modelName of GEMINI_MODELS) {
       const modelStart = Date.now();
@@ -280,12 +281,14 @@ REPLY: <your warm response to me in ${preferredLanguage}>`
           const trimmed = response.text.trim();
           if (trimmed.length > 3) {
             replyText = trimmed;
+            replySource = `gemini:${modelName}`;
             break;
           }
         } else if (response && response.candidates && response.candidates[0]?.content?.parts) {
           const combined = response.candidates[0].content.parts.map(p => p.text || '').join('').trim();
           if (combined.length > 3) {
             replyText = combined;
+            replySource = `gemini:${modelName}`;
             break;
           }
         }
@@ -322,7 +325,8 @@ REPLY: <your warm response to me in ${preferredLanguage}>`
       transcription: parsedTranscription || userMessage || 'Voice Question',
       patientName: patient.name,
       patientId: patient._id,
-      preferredLanguage: preferredLanguage
+      preferredLanguage: preferredLanguage,
+      replySource
     };
   } catch (err) {
     console.error('❌ Patient Chat Service Handled Error:', err.message);
@@ -332,7 +336,8 @@ REPLY: <your warm response to me in ${preferredLanguage}>`
       transcription: userMessage || 'Voice Question',
       patientName: safePatient.name,
       patientId: safePatient._id,
-      preferredLanguage: safePatient.preferredLanguage || 'Assamese'
+      preferredLanguage: safePatient.preferredLanguage || 'Assamese',
+      replySource: 'fallback'
     };
   }
 }

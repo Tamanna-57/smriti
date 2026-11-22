@@ -641,7 +641,9 @@ router.post('/:id/chat', optionalAuth, async (req, res) => {
       reply: result.reply,
       transcription: result.transcription,
       patientName: result.patientName,
-      preferredLanguage: result.preferredLanguage
+      preferredLanguage: result.preferredLanguage,
+      // 'gemini:<model>' when Gemini answered, 'fallback' for the built-in offline reply
+      replySource: result.replySource || 'fallback'
     });
   } catch (err) {
     console.error('Chat endpoint handled error:', err.message);
