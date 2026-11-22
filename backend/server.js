@@ -7,6 +7,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
+// Render/Vercel put a proxy in front of the app: trust one hop so req.ip is the
+// real client address (used by the login rate limiter).
+app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
 

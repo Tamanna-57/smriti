@@ -204,23 +204,24 @@ const optionalAuth = async (req, res, next) => {
 };
 
 /**
- * In-memory sliding rate limiter for login & signup endpoints
- * Max 10 attempts per 15 minutes per IP
+ * In-memory rate limiter for login & signup endpoints
+ * Max 10 FAILED attempts per 15 minutes per client IP (brute-force protection).
+ * Successful logins do not count, so a family or an evaluator panel logging in
+ * repeatedly is not locked out. req.ip is the real client address because
+ * server.js sets 'trust proxy' (Render and Vercel sit behind a proxy).
  */
 const loginAttemptMap = new Map();
 
 const rateLimitLogin = (req, res, next) => {
-  const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown-ip';
+  const ip = req.ip || req.socket.remoteAddress || 'unknown-ip';
   const now = Date.now();
   const windowMs = 15 * 60 * 1000; // 15 minutes
   const maxAttempts = 10;
 
-  const clientData = loginAttemptMap.get(ip) || { count: 0, firstAttempt: now };
-
-  if (now - clientData.firstAttempt > windowMs) {
-    // Reset window
-    loginAttemptMap.set(ip, { count: 1, firstAttempt: now });
-    return next();
+  let clientData = loginAttemptMap.get(ip);
+  if (!clientData || now - clientData.firstAttempt > windowMs) {
+    clientData = { count: 0, firstAttempt: now };
+    loginAttemptMap.set(ip, clientData);
   }
 
   if (clientData.count >= maxAttempts) {
@@ -230,8 +231,12 @@ const rateLimitLogin = (req, res, next) => {
     });
   }
 
-  clientData.count += 1;
-  loginAttemptMap.set(ip, clientData);
+  // Count the attempt only if it is rejected (wrong PIN/password, unknown user)
+  res.on('finish', () => {
+    if (res.statusCode === 401 || res.statusCode === 403) {
+      clientData.count += 1;
+    }
+  });
   next();
 };
 
