@@ -349,6 +349,7 @@ export default function DailyRoutineSequencer() {
   }, [speakText, currentLanguage, dynamicPatientRoutines]);
 
   const hasInitializedRef = useRef(false);
+  const firstRoundStartedRef = useRef(false);
 
   // Start game on mount with ML adaptive calibration (runs ONCE per session)
   useEffect(() => {
@@ -380,15 +381,23 @@ export default function DailyRoutineSequencer() {
             setTimeout(() => { if (isMounted) setAiStartingBanner(null); }, 6000);
           }
         }
+        firstRoundStartedRef.current = true;
         generateRound(1, initialLen);
       } catch (e) {
+        if (!isMounted) return;
+        firstRoundStartedRef.current = true;
         generateRound(1, 4);
       }
     }
 
     gameStartTimeRef.current = Date.now();
     initAdaptiveStartingDifficulty();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+      // If this run was cancelled (React StrictMode re-mount, or the patient's reminders
+      // refreshing) before the first round was dealt, allow the next run to deal it.
+      if (!firstRoundStartedRef.current) hasInitializedRef.current = false;
+    };
   }, [dynamicPatientRoutines.length, activePatient?.id, activePatient?._id, generateRound]);
 
   // Handle Card Tap
