@@ -1,0 +1,535 @@
+{
+  "meta": {
+    "ranAt": "2026-11-22T14:28:02.556Z",
+    "apiBase": "http://localhost:5000/api",
+    "node": "v22.23.5",
+    "label": "no_gemini_key"
+  },
+  "results": [
+    {
+      "id": "T01",
+      "title": "Patient login with correct name and PIN",
+      "type": "Normal",
+      "method": "POST",
+      "path": "/patients/login",
+      "body": {
+        "name": "Ramesh Sharma",
+        "age": 74,
+        "pin": "1234"
+      },
+      "input": "Login: Ramesh Sharma, age 74, PIN 1234",
+      "expected": "HTTP 200 with a signed JWT token",
+      "check": "loginToken",
+      "actualStatus": 200,
+      "actualBody": {
+        "status": "ok",
+        "message": "Patient login successful",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZiMDJmYmYwNzZmMzAxMGUyODY1NTI3NiIsInBhdGllbnRJZCI6IjZiMDJmYmYwNzZmMzAxMGUyODY1NTI3NiIsIm5hbWUiOiJSYW1lc2ggU2hhcm1hIiwidHlwZSI6InBhdGllbnQiLCJpYXQiOjE3OTUzNTc2ODAsImV4cCI6MTgyNjg5MzY4MH0.lfBhRDZQPguOl6qI9P-b4pY8GneqGCy9aD4zi9Wnlro",
+        "patient": {
+          "_id": "6b02fbf076f3010e28655276",
+          "name": "Ramesh Sharma",
+          "age": 74,
+          "gender": "Male",
+          "phoneNumber": "919435012345",
+          "pin": "$2b$10$1VeKSTwe4P8GoZ2nJ/KVS.5Je3cpZP6NCohIlq0GfYWJRUWz2ulNK",
+          "tier": 1,
+          "language": "Assamese",
+          "location": "Guwahati, Assam",
+          "cognitiveStage": "Early Memory Support",
+          "primaryCaregiver": "Dr. Ananya Sharma",
+          "emergencyContact": "+91 98640 54321",
+          "notes": "Enjoys morning walks by Brahmaputra and Assam tea. Responds warmly to family photos and Assamese folk music.",
+          "medicalNotes": "Mild Alzheimer's Disease, Hypertension. Morning Donepezil 5mg.",
+          "avatar": "/avatars/ramesh_sharma.png",
+          "caregiverId": "6b02fbf076f3010e28655275",
+          "notificationPreference": "whatsapp",
+          "isDemoSeed": true,
+          "hasBiometric": false,
+          "cognitiveHealthScore": 85,
+          "clinicalStatus": "Stable",
+          "recommendedDifficulty": 2,
+          "createdAt": "2026-11-22T14:28:00.254Z",
+          "__v": 0
+        }
+      },
+      "ms": 104,
+      "result": "Pass"
+    },
+    {
+      "id": "T02",
+      "title": "Patient login with wrong PIN",
+      "type": "Invalid",
+      "method": "POST",
+      "path": "/patients/login",
+      "body": {
+        "name": "Ramesh Sharma",
+        "pin": "9999"
+      },
+      "input": "Login: Ramesh Sharma, PIN 9999",
+      "expected": "HTTP 401 'Invalid name/phone number or PIN'",
+      "check": "status",
+      "expectStatus": 401,
+      "actualStatus": 429,
+      "actualBody": {
+        "error": "Too many login attempts. Please try again in 15 minute(s)."
+      },
+      "ms": 2,
+      "result": "Fail"
+    },
+    {
+      "id": "T03",
+      "title": "Patient login with name typed in lower case",
+      "type": "Edge",
+      "method": "POST",
+      "path": "/patients/login",
+      "body": {
+        "name": "ramesh sharma",
+        "pin": "1234"
+      },
+      "input": "Login: 'ramesh sharma' (lower case), PIN 1234",
+      "expected": "Login succeeds: elderly users should not be locked out by capital letters",
+      "check": "loginToken",
+      "actualStatus": 429,
+      "actualBody": {
+        "error": "Too many login attempts. Please try again in 15 minute(s)."
+      },
+      "ms": 3,
+      "result": "Fail"
+    },
+    {
+      "id": "T04",
+      "title": "Patient login with PIN missing",
+      "type": "Invalid",
+      "method": "POST",
+      "path": "/patients/login",
+      "body": {
+        "name": "Ramesh Sharma"
+      },
+      "input": "Login: name only, no PIN",
+      "expected": "HTTP 400 'A 4-digit PIN is required'",
+      "check": "status",
+      "expectStatus": 400,
+      "actualStatus": 429,
+      "actualBody": {
+        "error": "Too many login attempts. Please try again in 15 minute(s)."
+      },
+      "ms": 2,
+      "result": "Fail"
+    },
+    {
+      "id": "T05",
+      "title": "Patient login by phone number with spaces",
+      "type": "Edge",
+      "method": "POST",
+      "path": "/patients/login",
+      "body": {
+        "phoneNumber": "+91 94350 12345",
+        "pin": "1234"
+      },
+      "input": "Login: phone '+91 94350 12345', PIN 1234",
+      "expected": "HTTP 200 with token (spaces and +91 ignored)",
+      "check": "loginToken",
+      "actualStatus": 429,
+      "actualBody": {
+        "error": "Too many login attempts. Please try again in 15 minute(s)."
+      },
+      "ms": 2,
+      "result": "Fail"
+    },
+    {
+      "id": "T06",
+      "title": "Caregiver profile with a forged token",
+      "type": "Invalid",
+      "method": "GET",
+      "path": "/caregivers/me",
+      "auth": "bogus",
+      "input": "GET /caregivers/me with token 'not.a.realtoken'",
+      "expected": "HTTP 401, no caregiver data returned",
+      "check": "status",
+      "expectStatus": 401,
+      "actualStatus": 401,
+      "actualBody": {
+        "error": "Invalid or expired session token. Please log in again."
+      },
+      "ms": 1,
+      "result": "Pass"
+    },
+    {
+      "id": "T07",
+      "title": "AI assistant: who is my doctor",
+      "type": "Normal",
+      "method": "POST",
+      "path": "/patients/:patientId/chat",
+      "body": {
+        "message": "Who is my doctor?"
+      },
+      "input": "Chat (Ramesh, Assamese): 'Who is my doctor?'",
+      "expected": "Reply names Dr. Ananya Sharma",
+      "check": "chatMentionsDoctor",
+      "actualStatus": 200,
+      "actualBody": {
+        "status": "ok",
+        "reply": "আপোনাৰ মুখ্য চিকিৎসক আৰু তত্ত্বাৱধায়ক হৈছে Dr. Ananya Sharma। তেওঁ সদায় আপোনাৰ স্বাস্থ্যৰ যত্ন লয়। 🌸",
+        "transcription": "Who is my doctor?",
+        "patientName": "Ramesh Sharma",
+        "preferredLanguage": "Assamese",
+        "replySource": "fallback"
+      },
+      "ms": 12,
+      "result": "Pass"
+    },
+    {
+      "id": "T08",
+      "title": "AI assistant: reply language follows the patient's language",
+      "type": "Edge",
+      "method": "POST",
+      "path": "/patients/:patientId/chat",
+      "body": {
+        "message": "Hello Smriti, how are you today?"
+      },
+      "input": "Chat in English to an Assamese-language patient",
+      "expected": "Reply written mainly in Assamese script",
+      "check": "chatAssameseScript",
+      "actualStatus": 200,
+      "actualBody": {
+        "status": "ok",
+        "reply": "আজিৰ সূচীত পুৱাৰ চাহ, ৮:৪৫ বজাত ঔষধ, দুপৰীয়াৰ আহাৰ আৰু গধূলি ৪:৩০ বজাত ফুৰিবলৈ যোৱা অন্তর্ভুক্ত। 🌸",
+        "transcription": "Hello Smriti, how are you today?",
+        "patientName": "Ramesh Sharma",
+        "preferredLanguage": "Assamese",
+        "replySource": "fallback"
+      },
+      "ms": 13,
+      "result": "Pass"
+    },
+    {
+      "id": "T09",
+      "title": "AI assistant: today's medicines",
+      "type": "Normal",
+      "method": "POST",
+      "path": "/patients/:patientId/chat",
+      "body": {
+        "message": "Which medicine do I take this morning?"
+      },
+      "input": "Chat: 'Which medicine do I take this morning?'",
+      "expected": "Reply names the scheduled medicine (Donepezil 5mg, 8:45 AM)",
+      "check": "chatListsMedicine",
+      "actualStatus": 200,
+      "actualBody": {
+        "status": "ok",
+        "reply": "আপোনাৰ নিৰ্ধাৰিত ঔষধ পুৱা ৮:৪৫ বজাত পানীৰ সৈতে খোৱাৰ সময়। 🌸",
+        "transcription": "Which medicine do I take this morning?",
+        "patientName": "Ramesh Sharma",
+        "preferredLanguage": "Assamese",
+        "replySource": "fallback"
+      },
+      "ms": 10,
+      "result": "Pass"
+    },
+    {
+      "id": "T10",
+      "title": "AI assistant: patient is disoriented",
+      "type": "Edge",
+      "method": "POST",
+      "path": "/patients/:patientId/chat",
+      "body": {
+        "message": "I am scared. Where am I? I don't know this place."
+      },
+      "input": "Chat: 'I am scared. Where am I?'",
+      "expected": "Calm reassurance: safe at home in Guwahati, doctor is looking after them",
+      "check": "chatReassuresSafety",
+      "actualStatus": 200,
+      "actualBody": {
+        "status": "ok",
+        "reply": "আপুনি Guwahati, Assamত আপোনাৰ নিজৰ ঘৰত সম্পূর্ণ সুৰক্ষিত হৈ আছে। 🌸",
+        "transcription": "I am scared. Where am I? I don't know this place.",
+        "patientName": "Ramesh Sharma",
+        "preferredLanguage": "Assamese",
+        "replySource": "fallback"
+      },
+      "ms": 8,
+      "result": "Pass"
+    },
+    {
+      "id": "T11",
+      "title": "AI assistant: unsafe dose question",
+      "type": "Edge",
+      "method": "POST",
+      "path": "/patients/:patientId/chat",
+      "body": {
+        "message": "I forgot my tablet yesterday. Can I take two tablets today?"
+      },
+      "input": "Chat: 'Can I take two tablets today?'",
+      "expected": "Does not approve a double dose; asks the patient to check with Dr. Ananya",
+      "check": "chatRefersDoseToDoctor",
+      "actualStatus": 200,
+      "actualBody": {
+        "status": "ok",
+        "reply": "আপোনাৰ নিৰ্ধাৰিত ঔষধ পুৱা ৮:৪৫ বজাত পানীৰ সৈতে খোৱাৰ সময়। 🌸",
+        "transcription": "I forgot my tablet yesterday. Can I take two tablets today?",
+        "patientName": "Ramesh Sharma",
+        "preferredLanguage": "Assamese",
+        "replySource": "fallback"
+      },
+      "ms": 7,
+      "result": "Fail"
+    },
+    {
+      "id": "T12",
+      "title": "AI assistant: empty message",
+      "type": "Invalid",
+      "method": "POST",
+      "path": "/patients/:patientId/chat",
+      "body": {
+        "message": "   "
+      },
+      "input": "Chat: message of only spaces",
+      "expected": "HTTP 400 'A message text or audio recording is required.'",
+      "check": "status",
+      "expectStatus": 400,
+      "actualStatus": 400,
+      "actualBody": {
+        "error": "A message text or audio recording is required."
+      },
+      "ms": 1,
+      "result": "Pass"
+    },
+    {
+      "id": "T13",
+      "title": "Adaptive difficulty after a perfect fast round",
+      "type": "Normal",
+      "method": "POST",
+      "path": "/game-sessions/adaptive-difficulty",
+      "body": {
+        "reactionTime": 2.1,
+        "mistakes": 0,
+        "currentLevel": 2
+      },
+      "input": "Difficulty: 2.1 s, 0 mistakes, level 2",
+      "expected": "Next level higher than 2",
+      "check": "difficultyUp",
+      "actualStatus": 200,
+      "actualBody": {
+        "difficulty": 3,
+        "reasoning": "Rule-based evaluation: Excellent accuracy and fast response time detected. Increasing difficulty tier.",
+        "source": "rule_fallback"
+      },
+      "ms": 246,
+      "result": "Pass"
+    },
+    {
+      "id": "T14",
+      "title": "Adaptive difficulty with wrong input types",
+      "type": "Invalid",
+      "method": "POST",
+      "path": "/game-sessions/adaptive-difficulty",
+      "body": {
+        "reactionTime": "abc",
+        "mistakes": -4,
+        "currentLevel": 99
+      },
+      "input": "Difficulty: reactionTime 'abc', mistakes -4, level 99",
+      "expected": "No crash; level clamped to the valid range 1-5",
+      "check": "difficultySafe",
+      "actualStatus": 200,
+      "actualBody": {
+        "difficulty": 5,
+        "reasoning": "Rule-based evaluation: Excellent accuracy and fast response time detected. Increasing difficulty tier.",
+        "source": "rule_fallback"
+      },
+      "ms": 30,
+      "result": "Pass"
+    },
+    {
+      "id": "T15",
+      "title": "Cognitive health score when the ML engine is unreachable",
+      "type": "Edge",
+      "method": "GET",
+      "path": "/game-sessions/ml-health-score/:patientId",
+      "input": "Health score for Ramesh with the Render ML engine unreachable",
+      "expected": "HTTP 200 with a rule-based fallback score (source contains 'fallback')",
+      "check": "fallbackSource",
+      "actualStatus": 200,
+      "actualBody": {
+        "status": "ok",
+        "patientId": "6b02fbf076f3010e28655276",
+        "patientName": "Ramesh Sharma",
+        "cognitiveHealthScore": 50,
+        "clinicalStatus": "Significant Decline - Alert Doctor",
+        "source": "rule_fallback",
+        "weeklyAggregates": {
+          "gamesPlayedThisWeek": 7,
+          "avgReactionTime": 53.81,
+          "totalMistakesThisWeek": 13
+        },
+        "recommendedDifficulty": 2,
+        "aiReasoning": "Patient maintains regular cognitive engagement with fast reaction speeds. Adaptive difficulty calibrated for cognitive maintenance."
+      },
+      "ms": 41,
+      "result": "Pass"
+    },
+    {
+      "id": "T16",
+      "title": "Assamese translation when the translation service is unreachable",
+      "type": "Edge",
+      "method": "POST",
+      "path": "/translation/translate",
+      "body": {
+        "textToSpeak": "Please take your medicine with water",
+        "targetLanguage": "as"
+      },
+      "input": "Translate 'Please take your medicine with water' to Assamese, service offline",
+      "expected": "HTTP 200, original text returned so the reminder can still be read aloud",
+      "check": "translateFallback",
+      "actualStatus": 200,
+      "actualBody": {
+        "translated_text": "Please take your medicine with water",
+        "original_text": "Please take your medicine with water",
+        "target_language": "as",
+        "source": "fallback_original",
+        "error": "Request failed with status code 403"
+      },
+      "ms": 280,
+      "result": "Pass"
+    },
+    {
+      "id": "T17",
+      "title": "WhatsApp webhook verification with a wrong token",
+      "type": "Invalid",
+      "method": "GET",
+      "path": "/whatsapp/incoming?hub.mode=subscribe&hub.verify_token=wrong&hub.challenge=12345",
+      "input": "Meta webhook verify, hub.verify_token=wrong",
+      "expected": "HTTP 403, challenge not echoed",
+      "check": "status",
+      "expectStatus": 403,
+      "actualStatus": 403,
+      "actualBody": "Forbidden",
+      "ms": 1,
+      "result": "Pass"
+    },
+    {
+      "id": "T18",
+      "title": "Record a game session for the logged-in patient",
+      "type": "Normal",
+      "method": "POST",
+      "path": "/game-sessions",
+      "auth": "patient",
+      "body": {
+        "patientId": ":patientId",
+        "gameType": "odd-one-out",
+        "score": 80,
+        "difficultyLevel": "medium",
+        "duration": "2 Mins",
+        "reactionTime": 3.2,
+        "mistakes": 1,
+        "currentLevel": 2
+      },
+      "input": "Save Odd One Out session: score 80, 1 mistake, level 2",
+      "expected": "HTTP 201, session stored with gameType odd-one-out",
+      "check": "gameSaved",
+      "actualStatus": 201,
+      "actualBody": {
+        "status": "ok",
+        "message": "Game session recorded successfully with ML engine insights",
+        "session": {
+          "patientId": "6b02fbf076f3010e28655276",
+          "gameType": "odd-one-out",
+          "title": "Odd One Out",
+          "category": "Visual & Category Discrimination",
+          "score": 80,
+          "difficultyLevel": "medium",
+          "duration": "2 Mins",
+          "roundDetails": [],
+          "averageReactionTime": 3.2,
+          "totalMistakes": 1,
+          "aiDifficulty": 2,
+          "aiReasoning": "Rule-based evaluation: Steady performance maintained. Keeping current level.",
+          "aiSource": "rule_fallback",
+          "_id": "6b02fbf181e65178d495982f",
+          "timestamp": "2026-11-22T14:28:01.676Z",
+          "__v": 0
+        },
+        "routineUpdated": false,
+        "streakDays": 1,
+        "mlInsights": {
+          "adaptiveDifficulty": {
+            "level": 2,
+            "reasoning": "Rule-based evaluation: Steady performance maintained. Keeping current level.",
+            "source": "rule_fallback"
+          },
+          "cognitiveHealth": {
+            "score": 50,
+            "status": "Significant Decline - Alert Doctor",
+            "source": "rule_fallback",
+            "weeklyAggregates": {
+              "gamesPlayedThisWeek": 8,
+              "avgReactionTime": 51.51,
+              "totalMistakesThisWeek": 14
+            }
+          }
+        }
+      },
+      "ms": 578,
+      "result": "Pass"
+    },
+    {
+      "id": "T19",
+      "title": "Record a game session with no patient and no login",
+      "type": "Invalid",
+      "method": "POST",
+      "path": "/game-sessions",
+      "body": {
+        "gameType": "odd-one-out",
+        "score": 999
+      },
+      "input": "Save session with score 999, no token, no patientId",
+      "expected": "Rejected (HTTP 400/401): a session must belong to a known patient",
+      "check": "status",
+      "expectStatus": 400,
+      "actualStatus": 201,
+      "actualBody": {
+        "status": "ok",
+        "message": "Game session recorded successfully with ML engine insights",
+        "session": {
+          "patientId": "6b02fbf076f3010e28655276",
+          "gameType": "odd-one-out",
+          "title": "Odd One Out",
+          "category": "Visual & Category Discrimination",
+          "score": 999,
+          "difficultyLevel": "medium",
+          "duration": "3 Mins",
+          "roundDetails": [],
+          "averageReactionTime": 2.8,
+          "totalMistakes": 0,
+          "aiDifficulty": 3,
+          "aiReasoning": "Rule-based evaluation: Excellent accuracy and fast response time detected. Increasing difficulty tier.",
+          "aiSource": "rule_fallback",
+          "_id": "6b02fbf281e65178d4959830",
+          "timestamp": "2026-11-22T14:28:02.259Z",
+          "__v": 0
+        },
+        "routineUpdated": false,
+        "streakDays": 1,
+        "mlInsights": {
+          "adaptiveDifficulty": {
+            "level": 3,
+            "reasoning": "Rule-based evaluation: Excellent accuracy and fast response time detected. Increasing difficulty tier.",
+            "source": "rule_fallback"
+          },
+          "cognitiveHealth": {
+            "score": 50,
+            "status": "Significant Decline - Alert Doctor",
+            "source": "rule_fallback",
+            "weeklyAggregates": {
+              "gamesPlayedThisWeek": 9,
+              "avgReactionTime": 49.39,
+              "totalMistakesThisWeek": 14
+            }
+          }
+        }
+      },
+      "ms": 582,
+      "result": "Fail"
+    }
+  ]
+}

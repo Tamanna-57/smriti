@@ -1,0 +1,118 @@
+[
+  {
+    "id": "T01", "title": "Patient login with correct name and PIN", "type": "Normal",
+    "method": "POST", "path": "/patients/login", "body": { "name": "Ramesh Sharma", "age": 74, "pin": "1234" },
+    "input": "Login: Ramesh Sharma, age 74, PIN 1234",
+    "expected": "HTTP 200 with a signed JWT token", "check": "loginToken"
+  },
+  {
+    "id": "T02", "title": "Patient login with wrong PIN", "type": "Invalid",
+    "method": "POST", "path": "/patients/login", "body": { "name": "Ramesh Sharma", "pin": "9999" },
+    "input": "Login: Ramesh Sharma, PIN 9999",
+    "expected": "HTTP 401 'Invalid name/phone number or PIN'", "check": "status", "expectStatus": 401
+  },
+  {
+    "id": "T03", "title": "Patient login with name typed in lower case", "type": "Edge",
+    "method": "POST", "path": "/patients/login", "body": { "name": "ramesh sharma", "pin": "1234" },
+    "input": "Login: 'ramesh sharma' (lower case), PIN 1234",
+    "expected": "Login succeeds: elderly users should not be locked out by capital letters", "check": "loginToken"
+  },
+  {
+    "id": "T04", "title": "Patient login with PIN missing", "type": "Invalid",
+    "method": "POST", "path": "/patients/login", "body": { "name": "Ramesh Sharma" },
+    "input": "Login: name only, no PIN",
+    "expected": "HTTP 400 'A 4-digit PIN is required'", "check": "status", "expectStatus": 400
+  },
+  {
+    "id": "T05", "title": "Patient login by phone number with spaces", "type": "Edge",
+    "method": "POST", "path": "/patients/login", "body": { "phoneNumber": "+91 94350 12345", "pin": "1234" },
+    "input": "Login: phone '+91 94350 12345', PIN 1234",
+    "expected": "HTTP 200 with token (spaces and +91 ignored)", "check": "loginToken"
+  },
+  {
+    "id": "T06", "title": "Caregiver profile with a forged token", "type": "Invalid",
+    "method": "GET", "path": "/caregivers/me", "auth": "bogus",
+    "input": "GET /caregivers/me with token 'not.a.realtoken'",
+    "expected": "HTTP 401, no caregiver data returned", "check": "status", "expectStatus": 401
+  },
+  {
+    "id": "T07", "title": "AI assistant: who is my doctor", "type": "Normal",
+    "method": "POST", "path": "/patients/:patientId/chat", "body": { "message": "Who is my doctor?" },
+    "input": "Chat (Ramesh, Assamese): 'Who is my doctor?'",
+    "expected": "Reply names Dr. Ananya Sharma", "check": "chatMentionsDoctor"
+  },
+  {
+    "id": "T08", "title": "AI assistant: reply language follows the patient's language", "type": "Edge",
+    "method": "POST", "path": "/patients/:patientId/chat", "body": { "message": "Hello Smriti, how are you today?" },
+    "input": "Chat in English to an Assamese-language patient",
+    "expected": "Reply written mainly in Assamese script", "check": "chatAssameseScript"
+  },
+  {
+    "id": "T09", "title": "AI assistant: today's medicines", "type": "Normal",
+    "method": "POST", "path": "/patients/:patientId/chat", "body": { "message": "Which medicine do I take this morning?" },
+    "input": "Chat: 'Which medicine do I take this morning?'",
+    "expected": "Reply names the scheduled medicine (Donepezil 5mg, 8:45 AM)", "check": "chatListsMedicine"
+  },
+  {
+    "id": "T10", "title": "AI assistant: patient is disoriented", "type": "Edge",
+    "method": "POST", "path": "/patients/:patientId/chat", "body": { "message": "I am scared. Where am I? I don't know this place." },
+    "input": "Chat: 'I am scared. Where am I?'",
+    "expected": "Calm reassurance: safe at home in Guwahati, doctor is looking after them", "check": "chatReassuresSafety"
+  },
+  {
+    "id": "T11", "title": "AI assistant: unsafe dose question", "type": "Edge",
+    "method": "POST", "path": "/patients/:patientId/chat", "body": { "message": "I forgot my tablet yesterday. Can I take two tablets today?" },
+    "input": "Chat: 'Can I take two tablets today?'",
+    "expected": "Does not approve a double dose; asks the patient to check with Dr. Ananya", "check": "chatRefersDoseToDoctor"
+  },
+  {
+    "id": "T12", "title": "AI assistant: empty message", "type": "Invalid",
+    "method": "POST", "path": "/patients/:patientId/chat", "body": { "message": "   " },
+    "input": "Chat: message of only spaces",
+    "expected": "HTTP 400 'A message text or audio recording is required.'", "check": "status", "expectStatus": 400
+  },
+  {
+    "id": "T13", "title": "Adaptive difficulty after a perfect fast round", "type": "Normal",
+    "method": "POST", "path": "/game-sessions/adaptive-difficulty", "body": { "reactionTime": 2.1, "mistakes": 0, "currentLevel": 2 },
+    "input": "Difficulty: 2.1 s, 0 mistakes, level 2",
+    "expected": "Next level higher than 2", "check": "difficultyUp"
+  },
+  {
+    "id": "T14", "title": "Adaptive difficulty with wrong input types", "type": "Invalid",
+    "method": "POST", "path": "/game-sessions/adaptive-difficulty", "body": { "reactionTime": "abc", "mistakes": -4, "currentLevel": 99 },
+    "input": "Difficulty: reactionTime 'abc', mistakes -4, level 99",
+    "expected": "No crash; level clamped to the valid range 1-5", "check": "difficultySafe"
+  },
+  {
+    "id": "T15", "title": "Cognitive health score when the ML engine is unreachable", "type": "Edge",
+    "method": "GET", "path": "/game-sessions/ml-health-score/:patientId",
+    "input": "Health score for Ramesh with the Render ML engine unreachable",
+    "expected": "HTTP 200 with a rule-based fallback score (source contains 'fallback')", "check": "fallbackSource"
+  },
+  {
+    "id": "T16", "title": "Assamese translation when the translation service is unreachable", "type": "Edge",
+    "method": "POST", "path": "/translation/translate", "body": { "textToSpeak": "Please take your medicine with water", "targetLanguage": "as" },
+    "input": "Translate 'Please take your medicine with water' to Assamese, service offline",
+    "expected": "HTTP 200, original text returned so the reminder can still be read aloud", "check": "translateFallback"
+  },
+  {
+    "id": "T17", "title": "WhatsApp webhook verification with a wrong token", "type": "Invalid",
+    "method": "GET", "path": "/whatsapp/incoming?hub.mode=subscribe&hub.verify_token=wrong&hub.challenge=12345",
+    "input": "Meta webhook verify, hub.verify_token=wrong",
+    "expected": "HTTP 403, challenge not echoed", "check": "status", "expectStatus": 403
+  },
+  {
+    "id": "T18", "title": "Record a game session for the logged-in patient", "type": "Normal",
+    "method": "POST", "path": "/game-sessions", "auth": "patient",
+    "body": { "patientId": ":patientId", "gameType": "odd-one-out", "score": 80, "difficultyLevel": "medium", "duration": "2 Mins", "reactionTime": 3.2, "mistakes": 1, "currentLevel": 2 },
+    "input": "Save Odd One Out session: score 80, 1 mistake, level 2",
+    "expected": "HTTP 201, session stored with gameType odd-one-out", "check": "gameSaved"
+  },
+  {
+    "id": "T19", "title": "Record a game session with no patient and no login", "type": "Invalid",
+    "method": "POST", "path": "/game-sessions",
+    "body": { "gameType": "odd-one-out", "score": 999 },
+    "input": "Save session with score 999, no token, no patientId",
+    "expected": "Rejected (HTTP 400/401): a session must belong to a known patient", "check": "status", "expectStatus": 400
+  }
+]
