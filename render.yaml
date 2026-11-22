@@ -9,6 +9,12 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      # Reminder times in seed.js are built in server time; Render runs in UTC.
+      - key: TZ
+        value: Asia/Kolkata
+      # Hosted demo: seed when empty and refresh demo reminders daily (wipes the DB!)
+      - key: DEMO_SEED
+        value: daily
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET

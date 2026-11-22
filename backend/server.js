@@ -152,6 +152,51 @@ app.use((err, req, res, next) => {
 
 const PORT = systemPort || process.env.PORT || 5000;
 
+// ─────────────────────────────────────────────────────────────────────────────
+// DEMO DATA FOR HOSTED PROTOTYPES (opt-in; off unless DEMO_SEED is set)
+// Hosts such as Render's free plan have no shell to run `node seed.js`.
+//   DEMO_SEED=if-empty  seed the demo accounts when the database has no patients
+//   DEMO_SEED=daily     also re-seed when the demo reminders are not dated today,
+//                       at start-up and every night at 00:05 (server TZ), so
+//                       "today's schedule" stays current for evaluators.
+// seed.js WIPES all collections before seeding: use only on a demo database.
+// ─────────────────────────────────────────────────────────────────────────────
+const { execFile } = require('child_process');
+const cron = require('node-cron');
+
+function runSeedScript(reason) {
+  return new Promise((resolve) => {
+    console.log(`🌱 [Demo Seed] Running seed.js (${reason})...`);
+    execFile(process.execPath, [path.join(__dirname, 'seed.js')], { env: process.env, timeout: 120000 }, (err) => {
+      if (err) console.error('❌ [Demo Seed] seed.js failed:', err.message);
+      else console.log('✅ [Demo Seed] Demo data ready (caregiver dr.ananya@smriti.in, patients Ramesh Sharma / Meera Baruah).');
+      resolve();
+    });
+  });
+}
+
+async function maybeSeedDemoData() {
+  const mode = (process.env.DEMO_SEED || '').toLowerCase();
+  if (mode !== 'if-empty' && mode !== 'daily') return;
+  try {
+    const patientCount = await Patient.countDocuments();
+    if (patientCount === 0) {
+      await runSeedScript('database is empty');
+    } else if (mode === 'daily') {
+      const startOfToday = new Date();
+      startOfToday.setHours(0, 0, 0, 0);
+      const todaysReminders = await Reminder.countDocuments({ scheduledTime: { $gte: startOfToday } });
+      if (todaysReminders === 0) await runSeedScript('demo reminders are from an earlier day');
+    }
+  } catch (err) {
+    console.error('❌ [Demo Seed] Check failed:', err.message);
+  }
+  if (mode === 'daily' && !maybeSeedDemoData.scheduled) {
+    maybeSeedDemoData.scheduled = true;
+    cron.schedule('5 0 * * *', () => runSeedScript('nightly refresh'));
+  }
+}
+
 async function startServer() {
   const mongoUri = process.env.MONGO_URI;
   
@@ -174,6 +219,7 @@ async function startServer() {
       });
       const elapsed = Date.now() - startTime;
       console.log(`✅ [Boot] MongoDB Atlas connection established in ${elapsed}ms. Ready State: ${mongoose.connection.readyState}`);
+      await maybeSeedDemoData();
     } catch (err) {
       console.error('❌ [Boot] Initial MongoDB Atlas connection failed:', err.message);
       console.error('💡 [Diagnosis]: If running on Render, ensure:');
@@ -241,4 +287,4 @@ async function startServer() {
   });
 }
 
-startServer();
+startServer();
